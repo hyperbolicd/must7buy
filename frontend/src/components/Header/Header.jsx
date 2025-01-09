@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function HeaderComponent() {
+export default function Header() {
   return (
     <div>
         <header>

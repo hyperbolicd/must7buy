@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header/Header';
 import Homepage from './pages/HomePage/Homepage';
 import Footer from './components/Footer/Footer';
+import TestPage from './pages/TestPage';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <div className="container" style={{marginTop: "20px"}}>
           <Routes> {/* http://localhost:3000/ */}
             <Route path='/' exact element={<Homepage />}></Route>
+            <Route path='/test' exact element={<TestPage />}></Route>
           </Routes>
         </div>
         <Footer />

@@ -1,0 +1,119 @@
+:root {
+    --header-height: 60px;
+    --header-color: rgb(200, 191, 171);
+    --logo-width: 200px;
+    --logo-color: transparent;
+    --menu-width: 200px;
+    --menu-color: transparent;
+    --submenu-color: rgb(200, 200, 200);
+    --search-width: 200px;
+    --search-color: transparent;
+    --cart-width: 60px;
+    --cart-color: transparent;
+    --profile-width: 60px;
+    --profile-color: rgb(130, 111, 102);
+}
+
+.header {
+    height: var(--header-height);
+    background-color: var(--header-color);
+    position: relative;
+}
+
+.logo {
+    background-color: var(--logo-color);
+    display: inline-block;
+    height: 100%;
+    width: var(--logo-width);
+}
+
+.menu {
+    background-color: var(--menu-color);
+    display: inline-block;
+    height: 100%;
+    width: var(--menu-width);
+}
+
+.ul {
+    list-style: none;
+    padding: 0;
+    position: absolute;
+}
+
+.li {
+    display: inline-block;
+    padding: 0 10px;
+}
+
+.submenu {
+    background-color: rgb(255, 255, 255);
+    width: 100%;
+    position: absolute;
+    top: calc(var(--header-height) - 1px);
+    /* display: none; */
+}
+
+.ulTitle {
+    display: inline-block;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    height: 100%;
+    width: 20%;
+    color: rgb(0, 0, 0);
+}
+
+.ulDiv {
+    display: inline-block;
+    width: 80%;
+}
+
+.ulSecondary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 100px;
+    list-style: none;
+    margin: 5% auto;
+    text-align: center;
+    padding: 5% 5%;
+    border-left: 2px solid var(--submenu-color);
+}
+
+.liSecondary {
+    display: inline-block; 
+    padding: 0 10px;
+    justify-self: stretch;            
+    align-self: stretch;
+    place-self: stretch stretch;
+}
+
+.search {
+    background-color:  var(--search-color);;
+    display: inline-block;
+    height: 100%;
+    width: var(--search-width);
+    position: absolute;
+    right: var(--cart-width);
+}
+
+.cart {
+    background-color:  var(--cart-color);
+    display: inline-block;
+    height: 100%;
+    width: var(--cart-width);
+    position: absolute;
+    right: var(--profile-width);
+}
+
+.profile {
+    background-color: var(--profile-color);
+    display: inline-block;
+    height: 100%;
+    width: var(--profile-width);
+    position: absolute;
+    right: 0;
+}
+
+.hidden {
+    display: none;
+}

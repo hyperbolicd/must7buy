@@ -1,15 +1,12 @@
 import React from 'react'
+import styles from './Footer.module.css'
 
 export default function Footer() {
   return (
     <div>
-        <header>
-            <nav className='cl_navbar'>
-                <div className='cl_header_logo'>
-                    <img src='' alt='' />
-                </div>
-            </nav>
-        </header>
+        <footer className={styles.footer}>
+          <span className={styles.text}>All Rights Reserved 2024 @CathyLiuDemos</span>
+        </footer>
     </div>
   )
 }

@@ -77,6 +77,15 @@
   color: var(--default-color);
   width: 100% !important;
   height: 100% !important;
+  margin: 0;
+  padding: 0;
+
+  &:hover {
+    color: rgb(101, 101, 101);
+  }
+  &:active {
+    filter: brightness(1);
+  }
 }
 
 .btn-round {

@@ -53,7 +53,24 @@ class EmployeeService {
   }
 
   updateEmployee(employeeId, employee) {
-    // return axios.put(`${EMPLOYEE_API_BASE_URL}/${employeeId}`, employee)
+    return fetch(`${EMPLOYEE_API_BASE_URL}/${employeeId}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                // 'Access-Control-Allow-Origin': 'http://localhost:3000'。
+            },
+            method: 'PUT',
+            body: JSON.stringify(employee)
+        }) 
+        .then((response) => {
+        if(response.ok)
+            return response.json()
+        else
+            throw new Error(`HTTP error! status: ${response.status}, body: ${response.json()}`)
+        })
+        .catch((error => {
+            throw error;
+        })
+    )
   }
 
   deleteEmployee(employeeId) {

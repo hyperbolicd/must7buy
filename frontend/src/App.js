@@ -6,6 +6,8 @@ import ErpPage from './pages/ErpPage';
 import ErpProductPage from './pages/ErpProductPage/ErpProductPage';
 import MainPage from './pages/MainPage';
 import ErpHomepage from './pages/ErpHomepage/ErpHomepage';
+import ErpEmployeePage from './pages/ErpEmployeePage/ErpEmployeePage';
+import SaveEmployeePage from './pages/SaveEmployeePage/SaveEmployeePage';
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
             <Route path='erp' exact element={<ErpPage />}>
               <Route index element={<ErpHomepage />}></Route>
               <Route path='products' exact element={<ErpProductPage />}></Route>
+              <Route path='employees' exact element={<ErpEmployeePage />}></Route>
+              <Route path='employee/:id' element={<SaveEmployeePage />}></Route>
               <Route path="*" element={<ErpHomepage />}></Route>
             </Route>
           </Routes>

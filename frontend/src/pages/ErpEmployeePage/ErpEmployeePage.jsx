@@ -5,7 +5,7 @@ import Button from '../../components/atoms/Button/Button'
 import Title from '../../components/atoms/Title/Title'
 import Content from '../../components/atoms/Content/Content'
 import { useNavigate, useParams } from 'react-router-dom'
-import { getEmployees } from '../../services/employeeService'
+import { deleteEmployee, getEmployees } from '../../services/employeeService'
 
 export default function ErpEmployeePage() {
   const [employees, updateEmployees] = useState([])
@@ -27,12 +27,17 @@ export default function ErpEmployeePage() {
   }
 
   function handleDeleteEmployOnClick(id) {
-    const message = `請確認是否刪除員工${employees.find((employee) => employee.id === id).lastName}`
+    const message = `刪除員工會導致有相關欄位資料缺損
+    請確認是否刪除員工${employees.find((employee) => employee.id === id).lastName}`
     const result = window.confirm(message);
     if (result) {
-        alert('刪除')
-    } else {
-      alert('您已取消確認')
+      (async () => {
+        const result = await deleteEmployee(id)
+        if(result)
+          navigate('../employees')
+        else
+          alert('刪除失敗')
+      })()
     }
   }
 

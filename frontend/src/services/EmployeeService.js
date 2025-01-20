@@ -81,15 +81,16 @@ export async function updateEmployee(employeeId, employee) {
 }
 
 export async function deleteEmployee(employeeId) {
-    // return axios.delete(`${EMPLOYEE_API_BASE_URL}/${employeeId}`)
-    // try {
-    //     const response = await fetch(`${EMPLOYEE_API_BASE_URL}/${employeeId}`)
-    //     if (!response.ok) {
-    //         throw new Error(`HTTP error! status: ${response.status}`);
-    //     }
-    //     return response.json()
-    // } catch (error) {
-    //     console.error('Error in getEmplooyeeById:', error);
-    //     throw error
-    // }
+    try {
+        const response = await fetch(`${EMPLOYEE_API_BASE_URL}/${employeeId}`, {
+                            method: 'DELETE'
+                        })
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json()
+    } catch (error) {
+        console.error('Error in getEmplooyeeById:', error);
+        throw error
+    }
 }

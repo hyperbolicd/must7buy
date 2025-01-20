@@ -88,7 +88,7 @@ export async function deleteEmployee(employeeId) {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        return response.json()
+        return true
     } catch (error) {
         console.error('Error in getEmplooyeeById:', error);
         throw error

@@ -8,13 +8,13 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { deleteEmployee, getEmployees } from '../../services/employeeService'
 
 export default function ErpEmployeePage() {
-  const [employees, updateEmployees] = useState([])
+  const [employees, setEmployees] = useState([])
   const navigate = useNavigate()
 
   useEffect(() => {
     (async () => {
       const result = await getEmployees()
-      updateEmployees(result);
+      setEmployees(result);
     })()
   }, [])
 
@@ -34,7 +34,7 @@ export default function ErpEmployeePage() {
       (async () => {
         const result = await deleteEmployee(id)
         if(result)
-          navigate('../employees')
+          setEmployees(employees.filter( employee => employee.id != id ))
         else
           alert('刪除失敗')
       })()

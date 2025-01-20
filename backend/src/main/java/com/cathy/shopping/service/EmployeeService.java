@@ -38,7 +38,7 @@ public class EmployeeService {
     }
 
     public Boolean existsByEmail(String email) {
-        return employeeRepository.findByEmailId(email) != null;
+        return employeeRepository.existsByEmailId(email);
     }
 
     public Employee updateEmployee(Long id, Employee updatedEmployee) {

@@ -2,45 +2,51 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Title from '../../components/atoms/Title/Title'
 import Content from '../../components/atoms/Content/Content'
-import { debounce, getBase64FromUrl, getDataURLFromFile, getUrlFromBase64, imageAcceptType, validImageSize } from '../../utils/Util'
+import { debounce, getBase64FromUrl, getDataURLFromFile, getUrlFromBase64, imageAcceptType, validImageSize } from '../../utils/util'
 import Button from '../../components/atoms/Button/Button'
 import { createEmployee, getEmplooyeeById, updateEmployee } from '../../services/employeeService'
 
 export default function SaveEmployeePage() {
   const params = useParams()
-  const [employee, updateEmployee] = useState({
-    id: params.id,
+  const [employee, setEmployee] = useState({
+    id: '',
     firstName: '',
     lastName: '',
     emailId: '',
     photo: '',
-    hireDate: '',
-    photoUrl: ''
+    hireDate: ''
   })
+  const [photoUrl, setPhotoUrl] = useState(null)
   const navigate = useNavigate();  
 
   useEffect(() => {
     if(params.id === '_add') return
     (async () => {
       const result = await getEmplooyeeById(params.id)
-      updateEmployee(result);
+      setEmployee(result);
     })()
-  }, [])
+  }, [params.id])
+
+  useEffect(() => {
+    if (employee.photo) {
+      setPhotoUrl(getUrlFromBase64(employee.photo))
+    }
+  }, [employee.photo]);
 
   function changeHandler(e) {
     if(e) {
       switch(e.target.name) {
         case 'firstName':
-          updateEmployee({ ...employee, firstName: e.target.value })
+          setEmployee({ ...employee, firstName: e.target.value })
           break
         case 'lastName':
-          updateEmployee({ ...employee, lastName: e.target.value })
+          setEmployee({ ...employee, lastName: e.target.value })
           break
         case 'emailId':
-          updateEmployee({ ...employee, emailId: e.target.value })
+          setEmployee({ ...employee, emailId: e.target.value })
           break
         case 'hireDate':
-          updateEmployee({ ...employee, hireDate: e.target.value })
+          setEmployee({ ...employee, hireDate: e.target.value })
           break
         case 'photo':
           if(!e.target.files[0]) 
@@ -51,7 +57,8 @@ export default function SaveEmployeePage() {
             (async (file) => {
               const dataUrl = await getDataURLFromFile(file)
               const dataBase64 = getBase64FromUrl(dataUrl)
-              updateEmployee({ ...employee, photo: dataBase64, photoUrl: dataUrl })
+              setEmployee({ ...employee, photo: dataBase64 })
+              setPhotoUrl(dataUrl)
             })(e.target.files[0])
           } else {
             alert('僅接受 .png 及 .jpeg 且不大於 4MB')
@@ -78,7 +85,7 @@ export default function SaveEmployeePage() {
       })()
     } else {
       (async () => {
-        const result = await updateEmployee(employee.id, employee)
+        const result = await setEmployee(employee.id, employee)
         if(result)
           navigate('../employees')
         else
@@ -119,7 +126,7 @@ export default function SaveEmployeePage() {
             </div>
             <div className='mb-3'>
               <label>Photo: </label>
-              <img src={getUrlFromBase64(employee.photo)} />
+              <img src={photoUrl} />
             </div>
             <div className='mb-3'>
               <label>Update Photo: <label style={{ color: 'red'}}>僅接受 .png 及 .jpeg 且不大於 4MB </label></label>

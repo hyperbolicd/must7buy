@@ -1,81 +1,95 @@
-import {env} from '../configs/config';
+import { env } from '../configs/config';
 
 const EMPLOYEE_API_BASE_URL = `${env.API_URL}/api/v1/employees`
 
-class EmployeeService {
-
-  getEmployees() {
-    return fetch(EMPLOYEE_API_BASE_URL)
-        .then((response) => {
-        if(response.ok)
-            return response.json()
-        else
-            throw new Error(`HTTP error! status: ${response.status}`)
-        })
-        .catch((error => {
-            return null
-        })
-    )
-  }
-
-  createEmployee(employee) {
-    return fetch(EMPLOYEE_API_BASE_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(employee),
-    })
-    .then((response) => {
+export async function getEmployees() {
+    try {
+        const response = await fetch(EMPLOYEE_API_BASE_URL)
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        return response.json(); // 返回 JSON 格式的響應
-    })
-    .catch((error) => {
-        console.error("There was an error creating the employee:", error);
-        throw error; // 向上拋出錯誤
-    });
-  }
-
-  getEmplooyeeById(employeeId) {
-    return fetch(`${EMPLOYEE_API_BASE_URL}/${employeeId}`)
-        .then((response) => {
-        if(response.ok)
-            return response.json()
-        else
-            throw new Error(`HTTP error! status: ${response.status}`)
-        })
-        .catch((error => {
-            return null
-        })
-    )
-  }
-
-  updateEmployee(employeeId, employee) {
-    return fetch(`${EMPLOYEE_API_BASE_URL}/${employeeId}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                // 'Access-Control-Allow-Origin': 'http://localhost:3000'。
-            },
-            method: 'PUT',
-            body: JSON.stringify(employee)
-        }) 
-        .then((response) => {
-        if(response.ok)
-            return response.json()
-        else
-            throw new Error(`HTTP error! status: ${response.status}, body: ${response.json()}`)
-        })
-        .catch((error => {
-            throw error;
-        })
-    )
-  }
-
-  deleteEmployee(employeeId) {
-    // return axios.delete(`${EMPLOYEE_API_BASE_URL}/${employeeId}`)
-  }
+        return response.json()
+    } catch (error) {
+        console.error('Error in getEmployees:', error);
+        throw error
+    }
 }
 
-export default new EmployeeService()
+export async function createEmployee(employee) {
+    try {
+        employee.id = null
+        const response = await fetch(EMPLOYEE_API_BASE_URL, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(employee)
+                        })
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}, body: ${response.json()}`);
+        }
+        return response.json()
+    } catch (error) {
+        console.error('Error in createEmployee:', error);
+        throw error
+    }
+}
+
+export async function getEmplooyeeById(employeeId) {
+    try {
+        const response = await fetch(`${EMPLOYEE_API_BASE_URL}/${employeeId}`)
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json()
+    } catch (error) {
+        console.error('Error in getEmplooyeeById:', error);
+        throw error
+    }
+}
+
+export async function checkEmail(email) {
+    try {
+        const response = await fetch(`${EMPLOYEE_API_BASE_URL}/check-email?email=${email}`)
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json()
+    } catch (error) {
+        console.error('Error in getEmplooyeeById:', error);
+        throw error
+    }
+}
+
+export async function updateEmployee(employeeId, employee) {
+    try {
+        const response = await fetch(`${EMPLOYEE_API_BASE_URL}/${employeeId}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(employee)
+                        })
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}, body: ${response.json()}`);
+        }
+        return response.json()
+    } catch (error) {
+        console.error('Error in updateEmployee:', error);
+        throw error
+    }
+}
+
+export async function deleteEmployee(employeeId) {
+    // return axios.delete(`${EMPLOYEE_API_BASE_URL}/${employeeId}`)
+    // try {
+    //     const response = await fetch(`${EMPLOYEE_API_BASE_URL}/${employeeId}`)
+    //     if (!response.ok) {
+    //         throw new Error(`HTTP error! status: ${response.status}`);
+    //     }
+    //     return response.json()
+    // } catch (error) {
+    //     console.error('Error in getEmplooyeeById:', error);
+    //     throw error
+    // }
+}

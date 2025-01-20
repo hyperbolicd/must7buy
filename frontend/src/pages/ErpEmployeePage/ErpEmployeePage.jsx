@@ -1,23 +1,21 @@
 import React, { useEffect, useState } from 'react'
-import EmployeeService from '../../services/EmployeeService'
 import styles from './ErpEmployeePage.module.css'
-import { getUrlFromBase64 } from '../../utils/Util'
+import { getUrlFromBase64 } from '../../utils/util'
 import Button from '../../components/atoms/Button/Button'
 import Title from '../../components/atoms/Title/Title'
 import Content from '../../components/atoms/Content/Content'
 import { useNavigate, useParams } from 'react-router-dom'
+import { getEmployees } from '../../services/employeeService'
 
 export default function ErpEmployeePage() {
   const [employees, updateEmployees] = useState([])
   const navigate = useNavigate()
 
   useEffect(() => {
-    EmployeeService.getEmployees()
-    .then((fetchedData) => {
-      console.log(fetchedData)
-      if(fetchedData)
-        updateEmployees(fetchedData)
-    })
+    (async () => {
+      const result = await getEmployees()
+      updateEmployees(result);
+    })()
   }, [])
 
   function handleCreateEmployOnClick() {

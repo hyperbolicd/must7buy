@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Title from '../../components/atoms/Title/Title'
 import Content from '../../components/atoms/Content/Content'
-import EmployeeService from '../../services/EmployeeService'
 import { debounce, getBase64FromUrl, getDataURLFromFile, getUrlFromBase64, imageAcceptType, validImageSize } from '../../utils/Util'
 import Button from '../../components/atoms/Button/Button'
+import { createEmployee, getEmplooyeeById, updateEmployee } from '../../services/employeeService'
 
 export default function SaveEmployeePage() {
   const params = useParams()
@@ -21,12 +21,10 @@ export default function SaveEmployeePage() {
 
   useEffect(() => {
     if(params.id === '_add') return
-    
-    EmployeeService.getEmplooyeeById(params.id)
-      .then((defaultEmployee) => {
-        if(defaultEmployee)
-          updateEmployee(defaultEmployee)
-      })
+    (async () => {
+      const result = await getEmplooyeeById(params.id)
+      updateEmployee(result);
+    })()
   }, [])
 
   function changeHandler(e) {
@@ -70,13 +68,23 @@ export default function SaveEmployeePage() {
 
 
   function handleUpdateEmployClick() {
-    EmployeeService.updateEmployee(employee.id, employee)
-    .then(updatedEmployee => {
-      if(updatedEmployee)
-        navigate('../employees')
-      else
-        alert('更新失敗')
-    })
+    if(params.id === '_add') {
+      (async () => {
+        const result = await createEmployee(employee)
+        if(result)
+          navigate('../employees')
+        else
+          alert('建立失敗')
+      })()
+    } else {
+      (async () => {
+        const result = await updateEmployee(employee.id, employee)
+        if(result)
+          navigate('../employees')
+        else
+          alert('更新失敗')
+      })()
+    }
   }
 
   function handleCancelClick() {

@@ -31,17 +31,23 @@ public class EmployeeController {
     }
 
     // create employee rest api
+//    @PostMapping("/employees")
+//    public ResponseEntity<Employee> createEmployee(@RequestPart("employee") Employee employee, @RequestPart("photo")MultipartFile photoFile) {
+//        try {
+//            byte[] photoBytes = null;
+//            if(photoFile != null)
+//                photoBytes = photoFile.getBytes();
+//            Employee createdEmployee = employeeService.createEmployee(employee, photoBytes);
+//            return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
+//        } catch (IOException e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
+//    }
+    // create employee rest api
     @PostMapping("/employees")
-    public ResponseEntity<Employee> createEmployee(@RequestPart("employee") Employee employee, @RequestPart("photo")MultipartFile photoFile) {
-        try {
-            byte[] photoBytes = null;
-            if(photoFile != null)
-                photoBytes = photoFile.getBytes();
-            Employee createdEmployee = employeeService.createEmployee(employee, photoBytes);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
+        Employee createdEmployee = employeeService.createEmployee(employee);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
     }
 
     // get employee by id rest api
@@ -49,6 +55,15 @@ public class EmployeeController {
     public ResponseEntity<Employee> getEmployeeById(@PathVariable long id) {
         Employee employee = employeeService.getEmployeeById(id);
         return ResponseEntity.ok(employee);
+    }
+
+    // validate email is available
+    @GetMapping("/employees/check-email")
+    public ResponseEntity<Map<String, Boolean>> checkEmail(@RequestParam String email) {
+        Boolean isValid = !employeeService.existsByEmail(email);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("isValid", isValid);
+        return ResponseEntity.ok(response);
     }
 
     // update employee rest api

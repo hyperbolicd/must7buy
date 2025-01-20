@@ -23,6 +23,10 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
+    public Employee createEmployee(Employee employee) {
+        return employeeRepository.save(employee);
+    }
+
     public Employee createEmployee(Employee employee, byte[] photo) {
         employee.setPhoto(photo);
         return employeeRepository.save(employee);
@@ -31,6 +35,10 @@ public class EmployeeService {
     public Employee getEmployeeById(Long id) {
         return employeeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFountException("Employee not exist with id: " + id));
+    }
+
+    public Boolean existsByEmail(String email) {
+        return employeeRepository.findByEmailId(email) != null;
     }
 
     public Employee updateEmployee(Long id, Employee updatedEmployee) {

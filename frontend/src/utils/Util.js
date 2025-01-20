@@ -1,3 +1,5 @@
+import BLANK_USER from '../assets/blank-profile-picture-973460_1280.webp'
+
 function getFileTypeFromMagicNumber(base64) {
     const magicNumbers = atob(base64).slice(0, 4); // 解碼並取前 4 個字元
   
@@ -12,7 +14,11 @@ function getFileTypeFromMagicNumber(base64) {
   }
 
 export function getUrlFromBase64(base64) {
-    return `data:${getFileTypeFromMagicNumber(base64)};base64,${base64}`
+    if(!base64) {
+        return BLANK_USER
+    } else {
+        return `data:${getFileTypeFromMagicNumber(base64)};base64,${base64}`
+    }
 }
 
 export function debounce(func, delay) {

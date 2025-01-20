@@ -34,40 +34,41 @@ export default function SaveEmployeePage() {
   }, [employee.photo]);
 
   function changeHandler(e) {
-    if(e) {
-      switch(e.target.name) {
-        case 'firstName':
-          setEmployee({ ...employee, firstName: e.target.value })
+    const {name, value} = e.target
+    switch(name) {
+      case 'firstName':
+        setEmployee({ ...employee, firstName: value })
+        break
+      case 'lastName':
+        setEmployee({ ...employee, lastName: value })
+        break
+      case 'emailId':
+        setEmployee({ ...employee, emailId: value })
+        break
+      case 'hireDate':
+        setEmployee({ ...employee, hireDate: value })
+        break
+      case 'photo':
+        const file = e.target.files[0]
+        if(!file) {
           break
-        case 'lastName':
-          setEmployee({ ...employee, lastName: e.target.value })
-          break
-        case 'emailId':
-          setEmployee({ ...employee, emailId: e.target.value })
-          break
-        case 'hireDate':
-          setEmployee({ ...employee, hireDate: e.target.value })
-          break
-        case 'photo':
-          if(!e.target.files[0]) 
-            break
+        }
 
-          console.log(e.target.files[0])
-          if(imageAcceptType.includes(e.target.files[0].type) && validImageSize(e.target.files[0].size)) {
-            (async (file) => {
-              const dataUrl = await getDataURLFromFile(file)
-              const dataBase64 = getBase64FromUrl(dataUrl)
-              setEmployee({ ...employee, photo: dataBase64 })
-              setPhotoUrl(dataUrl)
-            })(e.target.files[0])
-          } else {
-            alert('僅接受 .png 及 .jpeg 且不大於 4MB')
-          }
-          break
-        default:
-          console.log('Does not meet the change state requirement.')
-          break
-      }
+        console.log(file)
+        if(imageAcceptType.includes(file.type) && validImageSize(file.size)) {
+          (async (file) => {
+            const dataUrl = await getDataURLFromFile(file)
+            const dataBase64 = getBase64FromUrl(dataUrl)
+            setEmployee({ ...employee, photo: dataBase64 })
+            setPhotoUrl(dataUrl)
+          })(file)
+        } else {
+          alert('僅接受 .png 及 .jpeg 且不大於 4MB')
+        }
+        break
+      default:
+        console.log('Does not meet the change state requirement.')
+        break
     }
   } 
 

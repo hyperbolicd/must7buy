@@ -100,46 +100,50 @@ export default function Header() {
             <LoginIcon width='50%'/>
           </Button>
         </div>
-        <div className={`${styles.submenu} ${option === 'A' ? '' : styles.hidden}`}>
-          <div className={styles.ulTitle}>
-            <span>分類一覽</span>
+        { option === 'A' &&
+          <div className={styles.submenu}>
+            <div className={styles.ulTitle}>
+              <span>分類一覽</span>
+            </div>
+            <div className={styles.ulDiv}>
+              <ul className={styles.ulSecondary}>
+                { 
+                  categories.map(category => {
+                    return(
+                      <li className={styles.liSecondary} key={category.keywords}>
+                        <Button variant='transparent' onClick={() => {handleCategoryClick(category.keywords)}}>
+                          <ArrowRightIcon height='20px' width='20px' color='rgb(200, 200, 200)' /> {category.name}
+                        </Button>
+                      </li>
+                    )
+                  }) 
+                }
+              </ul>
+            </div>
           </div>
-          <div className={styles.ulDiv}>
-            <ul className={styles.ulSecondary}>
-              { 
-                categories.map(category => {
-                  return(
-                    <li className={styles.liSecondary} key={category.keywords}>
-                      <Button variant='transparent' onClick={() => {handleCategoryClick(category.keywords)}}>
-                        <ArrowRightIcon height='20px' width='20px' color='rgb(200, 200, 200)' /> {category.name}
-                      </Button>
-                    </li>
-                  )
-                }) 
-              }
-            </ul>
+        }
+        { option === 'B' &&
+          <div className={styles.submenu}>
+            <div className={styles.ulTitle}>
+              <span>偶像一覽</span>
+            </div>
+            <div className={styles.ulDiv}>
+              <ul className={styles.ulSecondary}>
+                { 
+                  idols.map(idol => {
+                    return(
+                      <li className={styles.liSecondary} key={idol.keywords}>
+                        <Button variant='transparent' onClick={() => {handleCategoryClick(idol.keywords)}}>
+                          <ArrowRightIcon height='20px' width='20px' color='rgb(200, 200, 200)' /> {idol.name}
+                        </Button>
+                      </li>
+                    )
+                  }) 
+                }
+              </ul>
+            </div>
           </div>
-        </div>
-        <div className={`${styles.submenu} ${option === 'B' ? '' : styles.hidden}`}>
-          <div className={styles.ulTitle}>
-            <span>偶像一覽</span>
-          </div>
-          <div className={styles.ulDiv}>
-            <ul className={styles.ulSecondary}>
-              { 
-                idols.map(idol => {
-                  return(
-                    <li className={styles.liSecondary} key={idol.keywords}>
-                      <Button variant='transparent' onClick={() => {handleCategoryClick(idol.keywords)}}>
-                        <ArrowRightIcon height='20px' width='20px' color='rgb(200, 200, 200)' /> {idol.name}
-                      </Button>
-                    </li>
-                  )
-                }) 
-              }
-            </ul>
-          </div>
-        </div>
+        }
       </header>
     </div>
   )

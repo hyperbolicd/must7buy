@@ -87,7 +87,7 @@ export default function SaveEmployeePage() {
       })()
     } else {
       (async () => {
-        const result = await setEmployee(employee.id, employee)
+        const result = await updateEmployee(employee.id, employee)
         if(result)
           navigate('../employees')
         else

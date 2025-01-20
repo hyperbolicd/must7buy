@@ -20,6 +20,7 @@ export default function SaveEmployeePage() {
   const navigate = useNavigate();  
 
   useEffect(() => {
+    window.scrollTo(0, 0)
     if(params.id === '_add') return
     (async () => {
       const result = await getEmplooyeeById(params.id)

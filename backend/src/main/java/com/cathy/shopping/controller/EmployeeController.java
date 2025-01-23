@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = {"${settings.cors_origin}"})
 @RestController
 @RequestMapping("/api/v1/")
 public class EmployeeController {
@@ -61,6 +60,15 @@ public class EmployeeController {
     @GetMapping("/employees/check-email")
     public ResponseEntity<Map<String, Boolean>> checkEmail(@RequestParam String email) {
         Boolean isValid = !employeeService.existsByEmail(email);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("isValid", isValid);
+        return ResponseEntity.ok(response);
+    }
+
+    // validate username is available
+    @GetMapping("/employees/check-username")
+    public ResponseEntity<Map<String, Boolean>> checkUsername(@RequestParam String username) {
+        Boolean isValid = !employeeService.existsByUsername(username);
         Map<String, Boolean> response = new HashMap<>();
         response.put("isValid", isValid);
         return ResponseEntity.ok(response);

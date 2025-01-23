@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -16,6 +17,12 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "Username is mandatory")
+    private String username;
+
+    @NotBlank(message = "Password is mandatory")
+    private String password = "1qaz@WSX";
 
     @Column(name = "first_name")
     @NotBlank(message = "First name is mandatory")
@@ -42,8 +49,10 @@ public class Employee {
 
     }
 
-    public Employee(Long id, String firstName, String lastName, String emailId, byte[] photo, LocalDate hireDate) {
+    public Employee(Long id, String username, String password, String firstName, String lastName, String emailId, byte[] photo, LocalDate hireDate) {
         this.id = id;
+        this.username = username;
+        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailId = emailId;
@@ -57,6 +66,22 @@ public class Employee {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public @NotBlank(message = "Username is mandatory") String getUsername() {
+        return username;
+    }
+
+    public void setUsername(@NotBlank(message = "Username is mandatory") String username) {
+        this.username = username;
+    }
+
+    public @NotBlank(message = "Password is mandatory") String getPassword() {
+        return password;
+    }
+
+    public void setPassword(@NotBlank(message = "Password is mandatory") String password) {
+        this.password = password;
     }
 
     public @NotBlank(message = "First name is mandatory") String getFirstName() {

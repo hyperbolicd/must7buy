@@ -1,0 +1,65 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+table directory [note: 'App建立為Internal'] {
+  id integer [primary key]
+  name varchar 
+  type varchar
+  active tinyint [note: '是否啟用']
+}
+
+table group {
+  id integer [primary key]
+  directory_id integer
+  name varchar
+}
+
+table user {
+  id integer [primary key]
+  directory_id integer
+  username varchar
+  password varchar
+  display_name varchar
+  email varchar
+  photo blob
+  hire_date timestamp
+}
+
+table group_member {
+  group_id integer
+  user_id integer
+}
+
+table role {
+  id integer [primary key]
+  name varchar
+  description text
+}
+
+table role_member {
+  role_id integer 
+  group_id integer
+  user_id integer
+}
+
+table permission {
+  id integer [primary key]
+  name varchar
+  description text
+}
+
+table authority {
+  id integer [primary key]
+  permission_id integer
+  role_id integer
+}
+
+Ref: group.directory_id > directory.id
+Ref: user.directory_id > directory.id
+Ref: group_member.group_id > group.id
+Ref: group_member.user_id > user.id
+Ref: role_member.group_id > group.id
+Ref: role_member.user_id > user.id
+Ref: role_member.role_id > role.id
+Ref: authority.permission_id > permission.id
+Ref: authority.role_id > role.id

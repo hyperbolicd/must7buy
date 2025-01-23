@@ -41,6 +41,10 @@ public class EmployeeService {
         return employeeRepository.existsByEmailId(email);
     }
 
+    public Boolean existsByUsername(String username) {
+        return employeeRepository.existsByUsername(username);
+    }
+
     public Employee updateEmployee(Long id, Employee updatedEmployee) {
         Employee existeingEmployee = getEmployeeById(id);
 

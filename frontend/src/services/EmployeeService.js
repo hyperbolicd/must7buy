@@ -29,7 +29,7 @@ export async function createEmployee(employee) {
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${btoa('admin:admin')}`,
             },
-            body: JSON.stringify({username:"acc",password:"pss",firstName:"Foo",lastName:"Bar",emailId:"foo.bar@example.com"})//JSON.stringify(employee)
+            body: JSON.stringify(employee)
         })
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}, body: ${response.json()}`);

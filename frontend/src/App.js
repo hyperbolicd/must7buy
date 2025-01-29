@@ -8,6 +8,7 @@ import MainPage from './pages/MainPage';
 import ErpHomepage from './pages/ErpHomepage/ErpHomepage';
 import ErpEmployeePage from './pages/ErpEmployeePage/ErpEmployeePage';
 import SaveEmployeePage from './pages/SaveEmployeePage/SaveEmployeePage';
+import ErpLoginPage from './pages/ErpLoginPage/ErpLoginPage';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             {/* http://localhost:3000/erp */}
             <Route path='erp' exact element={<ErpPage />}>
               <Route index element={<ErpHomepage />}></Route>
+              <Route path='login' element={<ErpLoginPage />}></Route>
               <Route path='products' exact element={<ErpProductPage />}></Route>
               <Route path='employees' exact element={<ErpEmployeePage />}></Route>
               <Route path='employee/:id' element={<SaveEmployeePage />}></Route>

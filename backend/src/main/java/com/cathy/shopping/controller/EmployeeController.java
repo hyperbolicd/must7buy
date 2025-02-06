@@ -1,9 +1,13 @@
 package com.cathy.shopping.controller;
 
+import com.cathy.shopping.dto.JwtResponse;
 import com.cathy.shopping.exception.ResourceNotFountException;
 import com.cathy.shopping.model.Employee;
+import com.cathy.shopping.model.User;
 import com.cathy.shopping.repository.EmployeeRepository;
+import com.cathy.shopping.service.AuthService;
 import com.cathy.shopping.service.EmployeeService;
+import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +25,9 @@ public class EmployeeController {
 
     @Autowired
     EmployeeService employeeService;
+
+    @Autowired
+    AuthService authService;
 
     // get all employees
     @GetMapping("/")
@@ -82,5 +89,12 @@ public class EmployeeController {
         } else {
             return ResponseEntity.notFound().build(); // 404 Not Found
         }
+    }
+
+    @PermitAll
+    @PostMapping("/login")
+    public ResponseEntity<JwtResponse> login(@RequestBody Employee employee) {
+        JwtResponse jwtResponse = authService.verify(employee);
+        return ResponseEntity.ok(jwtResponse);
     }
 }

@@ -4,14 +4,11 @@ import com.cathy.shopping.exception.ResourceNotFountException;
 import com.cathy.shopping.model.Employee;
 import com.cathy.shopping.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class EmployeeService {
@@ -24,6 +21,7 @@ public class EmployeeService {
     }
 
     public Employee createEmployee(Employee employee) {
+        employee.setUsername(generateUsername());
         return employeeRepository.save(employee);
     }
 
@@ -38,22 +36,28 @@ public class EmployeeService {
     }
 
     public Boolean existsByEmail(String email) {
-        return employeeRepository.existsByEmailId(email);
+        return employeeRepository.existsByEmail(email);
     }
 
     public Employee updateEmployee(Long id, Employee updatedEmployee) {
         Employee existeingEmployee = getEmployeeById(id);
 
-        if(updatedEmployee.getFirstName() != null)
-            existeingEmployee.setFirstName(updatedEmployee.getFirstName());
-        if(updatedEmployee.getLastName() != null)
-            existeingEmployee.setLastName(updatedEmployee.getLastName());
-        if(updatedEmployee.getEmailId() != null)
-            existeingEmployee.setEmailId(updatedEmployee.getEmailId());
+        if(updatedEmployee.getUsername() != null)
+            existeingEmployee.setUsername(updatedEmployee.getUsername());
+        if(updatedEmployee.getPassword() != null)
+            existeingEmployee.setPassword(updatedEmployee.getPassword());
+        if(updatedEmployee.getDisplayName() != null)
+            existeingEmployee.setDisplayName(updatedEmployee.getDisplayName());
+        if(updatedEmployee.getEmail() != null)
+            existeingEmployee.setEmail(updatedEmployee.getEmail());
+        if(updatedEmployee.getAddress() != null)
+            existeingEmployee.setAddress(updatedEmployee.getAddress());
         if(updatedEmployee.getPhoto() != null)
             existeingEmployee.setPhoto(updatedEmployee.getPhoto());
         if(updatedEmployee.getHireDate() != null)
             existeingEmployee.setHireDate(updatedEmployee.getHireDate());
+        if(updatedEmployee.getRole() != null) // ADMIN
+            existeingEmployee.setRole(updatedEmployee.getRole());
 
         return employeeRepository.save(existeingEmployee);
     }
@@ -62,5 +66,14 @@ public class EmployeeService {
         Employee employee = getEmployeeById(id);
         employeeRepository.delete(employee);
         return true;
+    }
+
+    private String generateUsername() {
+        int year = LocalDate.now().getYear();
+        // 查詢當年最大流水號（例如 "E2024005" -> 5）
+        String lastUsername = employeeRepository.findTopByOrderByIdDesc().getUsername();
+        int sequence = (lastUsername != null) ? Integer.parseInt(lastUsername.substring(lastUsername.length() - 3)) + 1 : 1;
+        // 格式化為 "E2024001"
+        return "E" + year + String.format("%03d", sequence);
     }
 }

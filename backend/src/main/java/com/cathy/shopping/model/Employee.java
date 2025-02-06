@@ -1,13 +1,15 @@
 package com.cathy.shopping.model;
 
+import com.cathy.shopping.repository.EmployeeRepository;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
-import java.util.Objects;
+import java.util.Arrays;
 
 @Entity
 @Table(name = "employees")
@@ -17,18 +19,24 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "first_name")
-    @NotBlank(message = "First name is mandatory")
-    private String firstName;
+    @Column(unique = true)
+    @NotBlank(message = "Username is mandatory")
+    private String username;
 
-    @Column(name = "last_name")
-    @NotBlank(message = "Last name is mandatory")
-    private String lastName;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotBlank(message = "Password is mandatory")
+    private String password;
 
-    @Column(name = "email_id", unique = true)
+    @Column(name = "display_name")
+    @NotBlank(message = "Display name is mandatory")
+    private String displayName;
+
+    @Column(unique = true)
     @NotBlank(message = "Email is mandatory")
     @Email
-    private String emailId;
+    private String email;
+
+    private String address;
 
     @Column(length = 2097152)
     @Lob
@@ -38,17 +46,20 @@ public class Employee {
     @Column(name = "hire_date")
     private LocalDate hireDate;
 
-    public Employee() {
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
+    @Column(nullable = false)
+    private String source;
+
+    @PrePersist
+    public void setDefaultRole() {
+        this.role = Role.EMPLOYEE;
     }
 
-    public Employee(Long id, String firstName, String lastName, String emailId, byte[] photo, LocalDate hireDate) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.emailId = emailId;
-        this.photo = photo;
-        this.hireDate = hireDate;
+    public Employee() {
+
     }
 
     public Long getId() {
@@ -59,28 +70,44 @@ public class Employee {
         this.id = id;
     }
 
-    public @NotBlank(message = "First name is mandatory") String getFirstName() {
-        return firstName;
+    public @NotBlank(message = "Username is mandatory") String getUsername() {
+        return username;
     }
 
-    public void setFirstName(@NotBlank(message = "First name is mandatory") String firstName) {
-        this.firstName = firstName;
+    public void setUsername(@NotBlank(message = "Username is mandatory") String username) {
+        this.username = username;
     }
 
-    public @NotBlank(message = "Last name is mandatory") String getLastName() {
-        return lastName;
+    public @NotBlank(message = "Password is mandatory") String getPassword() {
+        return password;
     }
 
-    public void setLastName(@NotBlank(message = "Last name is mandatory") String lastName) {
-        this.lastName = lastName;
+    public void setPassword(@NotBlank(message = "Password is mandatory") String password) {
+        this.password = password;
     }
 
-    public @NotBlank(message = "Email is mandatory") @Email String getEmailId() {
-        return emailId;
+    public @NotBlank(message = "Display name is mandatory") String getDisplayName() {
+        return displayName;
     }
 
-    public void setEmailId(@NotBlank(message = "Email is mandatory") @Email String emailId) {
-        this.emailId = emailId;
+    public void setDisplayName(@NotBlank(message = "Display name is mandatory") String displayName) {
+        this.displayName = displayName;
+    }
+
+    public @NotBlank(message = "Email is mandatory") @Email String getEmail() {
+        return email;
+    }
+
+    public void setEmail(@NotBlank(message = "Email is mandatory") @Email String email) {
+        this.email = email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public byte[] getPhoto() {
@@ -97,5 +124,37 @@ public class Employee {
 
     public void setHireDate(LocalDate hireDate) {
         this.hireDate = hireDate;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", photo=" + Arrays.toString(photo) +
+                ", hireDate=" + hireDate +
+                ", role=" + role +
+                ", source='" + source + '\'' +
+                '}';
     }
 }

@@ -23,7 +23,7 @@ export default function Header() {
     { name: '聲音', keywords: 'voices'},
   ]
   const defaultOption = 'none'
-  const [option, changeOption] = useState(defaultOption)
+  const [option, setOption] = useState(defaultOption)
   const idols = [
     { name: 'Red', keywords: 'red'},
     { name: 'Yellow', keywords: 'yellow'},
@@ -34,7 +34,7 @@ export default function Header() {
 
   function handleLogoClick() {
     navigate('/home')
-    changeOption(defaultOption)
+    setOption(defaultOption)
   }
 
   function handleLoginClick() {
@@ -47,7 +47,7 @@ export default function Header() {
 
   function handleAllItemsClick() {
     navigate('/search')
-    changeOption(defaultOption)
+    setOption(defaultOption)
   }
 
   function handleCategoryClick(category) {
@@ -72,16 +72,16 @@ export default function Header() {
             <li className={styles.li}>
               <Button variant='transparent' onClick={() => {
                 const code = 'A'
-                if(option === code) changeOption(defaultOption)
-                else changeOption(code) }}>
+                if(option === code) setOption(defaultOption)
+                else setOption(code) }}>
                 分類
               </Button>
             </li>
             <li className={styles.li}>
               <Button variant='transparent' onClick={() => {
                 const code = 'B'
-                if(option === code) changeOption(defaultOption)
-                else changeOption(code) }}>
+                if(option === code) setOption(defaultOption)
+                else setOption(code) }}>
                 偶像
               </Button>
             </li>

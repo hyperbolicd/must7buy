@@ -16,14 +16,14 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1/employees")
 public class EmployeeController {
 
     @Autowired
     EmployeeService employeeService;
 
     // get all employees
-    @GetMapping("/employees")
+    @GetMapping("/")
     public ResponseEntity<List<Employee>> getAllEmployees() {
         List<Employee> employees = employeeService.getAllEmployees();
         return ResponseEntity.ok(employees);
@@ -43,7 +43,7 @@ public class EmployeeController {
 //        }
 //    }
     // create employee rest api
-    @PostMapping("/employees")
+    @PostMapping("/")
     public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
         employee.setSource("Internal");
         Employee createdEmployee = employeeService.createEmployee(employee);
@@ -51,14 +51,14 @@ public class EmployeeController {
     }
 
     // get employee by id rest api
-    @GetMapping("/employees/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable long id) {
         Employee employee = employeeService.getEmployeeById(id);
         return ResponseEntity.ok(employee);
     }
 
     // validate email is available
-    @GetMapping("/employees/check-email")
+    @GetMapping("/check-email")
     public ResponseEntity<Map<String, Boolean>> checkEmail(@RequestParam String email) {
         Boolean isValid = !employeeService.existsByEmail(email);
         Map<String, Boolean> response = new HashMap<>();
@@ -67,14 +67,14 @@ public class EmployeeController {
     }
 
     // update employee rest api
-    @PutMapping("/employees/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Employee> updateEmployee(@PathVariable long id, @RequestBody Employee employee) {
         Employee updatedEmployee = employeeService.updateEmployee(id, employee);
         return ResponseEntity.ok(updatedEmployee);
     }
 
     // delete employee rest api
-    @DeleteMapping("/employees/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable long id) {
         boolean isDeleted = employeeService.deleteEmployee(id);
         if (isDeleted) {

@@ -4,6 +4,7 @@ import com.cathy.shopping.exception.ResourceNotFountException;
 import com.cathy.shopping.model.Employee;
 import com.cathy.shopping.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,12 +17,16 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @Autowired
+    private PasswordEncoder encoder;
+
     public List<Employee> getAllEmployees() {
         return employeeRepository.findAll();
     }
 
     public Employee createEmployee(Employee employee) {
         employee.setUsername(generateUsername());
+        employee.setPassword(encoder.encode(employee.getPassword()));
         return employeeRepository.save(employee);
     }
 
@@ -45,7 +50,7 @@ public class EmployeeService {
         if(updatedEmployee.getUsername() != null)
             existeingEmployee.setUsername(updatedEmployee.getUsername());
         if(updatedEmployee.getPassword() != null)
-            existeingEmployee.setPassword(updatedEmployee.getPassword());
+            existeingEmployee.setPassword(encoder.encode(updatedEmployee.getPassword()));
         if(updatedEmployee.getDisplayName() != null)
             existeingEmployee.setDisplayName(updatedEmployee.getDisplayName());
         if(updatedEmployee.getEmail() != null)
@@ -71,7 +76,7 @@ public class EmployeeService {
     private String generateUsername() {
         int year = LocalDate.now().getYear();
         // 查詢當年最大流水號（例如 "E2024005" -> 5）
-        String lastUsername = employeeRepository.findTopByOrderByIdDesc().getUsername();
+        String lastUsername = employeeRepository.findTopByOrderByIdDesc().get().getUsername();
         int sequence = (lastUsername != null) ? Integer.parseInt(lastUsername.substring(lastUsername.length() - 3)) + 1 : 1;
         // 格式化為 "E2024001"
         return "E" + year + String.format("%03d", sequence);

@@ -31,6 +31,8 @@ export default function Header() {
     { name: 'Black', keywords: 'black'},
     { name: 'Pink', keywords: 'pink'},
   ]
+  const [isPlay, setIsPlayer] = useState(false)
+
 
   function handleLogoClick() {
     navigate('/home')
@@ -52,6 +54,10 @@ export default function Header() {
 
   function handleCategoryClick(category) {
     navigate(`search?category=${category}`)
+  }
+
+  function handleSuperIdolsClick() {
+    setIsPlayer(!isPlay)
   }
 
   return (
@@ -84,6 +90,15 @@ export default function Header() {
                 else setOption(code) }}>
                 偶像
               </Button>
+            </li>
+            <li className={styles.li}>
+              <Button variant='transparent' onClick={handleSuperIdolsClick}>
+                超級偶像
+              </Button>
+              <div id="player"></div>
+              { isPlay && 
+                <iframe style={{ display: "none" }} width="560" height="315" src="https://www.youtube.com/embed/aCgP8BFjrw4?si=JB7EwEdhpruvwAhk&amp;controls=0&amp;autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> 
+              }
             </li>
           </ul>
         </div>

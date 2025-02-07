@@ -30,7 +30,7 @@ public class EmployeeController {
     AuthService authService;
 
     // get all employees
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<Employee>> getAllEmployees() {
         List<Employee> employees = employeeService.getAllEmployees();
         return ResponseEntity.ok(employees);
@@ -50,7 +50,7 @@ public class EmployeeController {
 //        }
 //    }
     // create employee rest api
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
         employee.setSource("Internal");
         Employee createdEmployee = employeeService.createEmployee(employee);

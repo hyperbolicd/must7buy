@@ -1,8 +1,10 @@
-import React from 'react'
 import styles from './ErpHeader.module.css'
 import { Link } from 'react-router-dom'
+import { useUser } from '../../contexts/UserContext'
 
 export default function ErpHeader() {
+  const { user, setUser, isBackend } = useUser()
+
   const navs = [
     { name: '商品管理', path: 'products', isOpen: true},
     { name: '用戶管理', path: 'customers', isOpen: true},
@@ -12,6 +14,10 @@ export default function ErpHeader() {
     { name: 'Home', path: '', isOpen: true},
     { name: '前台', path: '/', isOpen: true},
   ]
+
+  function handleLogoutClick() {
+    setUser(null)
+  }
 
   return (
     <header>
@@ -27,6 +33,15 @@ export default function ErpHeader() {
               </div>
             )
           })
+        }
+        <div className={styles.function}>
+          <Link to={user ? 'me' : 'login'} >{user ? user.username : 'Login' }</Link>
+        </div>
+        {
+          user &&
+          <div className={styles.function}>
+            <Link onClick={handleLogoutClick} >Logout</Link>
+          </div>
         }
       </nav>
     </header>    

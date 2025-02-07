@@ -2,6 +2,25 @@ import { env } from '../configs/config';
 
 const EMPLOYEE_API_BASE_URL = `${env.API_URL}/api/v1/employees`
 
+export async function login(employee) {
+    try {
+        const response = await fetch(`${EMPLOYEE_API_BASE_URL}/login`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(employee)
+                        })
+        if (!response.ok) {
+            return null
+        }
+        return response.json()
+    } catch (error) {
+        console.error('Error in login:', error);
+        throw error
+    }
+}
+
 export async function getEmployees() {
     try {
         const response = await fetch(EMPLOYEE_API_BASE_URL)

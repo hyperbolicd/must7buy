@@ -10,6 +10,7 @@ import ErpEmployeePage from './pages/ErpEmployeePage/ErpEmployeePage';
 import SaveEmployeePage from './pages/SaveEmployeePage/SaveEmployeePage';
 import ErpLoginPage from './pages/ErpLoginPage/ErpLoginPage';
 import { UserProvider } from './contexts/UserContext';
+import PrivateRoute from './router/PrivateRouter';
 
 function App() {
   return (
@@ -24,7 +25,7 @@ function App() {
               <Route path="*" element={<Homepage />}></Route>
             </Route>
             {/* http://localhost:3000/erp */}
-            <Route path='erp' exact element={<UserProvider><ErpPage /></UserProvider>}>
+            <Route path='erp' exact element={<UserProvider><PrivateRoute><ErpPage /></PrivateRoute></UserProvider>}>
               <Route index element={<ErpHomepage />}></Route>
               <Route path='login' element={<ErpLoginPage />}></Route>
               <Route path='products' exact element={<ErpProductPage />}></Route>

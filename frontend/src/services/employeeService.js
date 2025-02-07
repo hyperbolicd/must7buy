@@ -5,12 +5,12 @@ const EMPLOYEE_API_BASE_URL = `${env.API_URL}/api/v1/employees`
 export async function login(employee) {
     try {
         const response = await fetch(`${EMPLOYEE_API_BASE_URL}/login`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(employee)
-                        })
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(employee)
+        })
         if (!response.ok) {
             return null
         }
@@ -21,9 +21,13 @@ export async function login(employee) {
     }
 }
 
-export async function getEmployees() {
+export async function getEmployees(token) {
     try {
-        const response = await fetch(EMPLOYEE_API_BASE_URL)
+        const response = await fetch(EMPLOYEE_API_BASE_URL, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        })
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -34,16 +38,17 @@ export async function getEmployees() {
     }
 }
 
-export async function createEmployee(employee) {
+export async function createEmployee(token, employee) {
     try {
         employee.id = null
         const response = await fetch(EMPLOYEE_API_BASE_URL, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(employee)
-                        })
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(employee)
+        })
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}, body: ${response.json()}`);
         }
@@ -54,41 +59,50 @@ export async function createEmployee(employee) {
     }
 }
 
-export async function getEmplooyeeById(employeeId) {
-    try {
-        const response = await fetch(`${EMPLOYEE_API_BASE_URL}/${employeeId}`)
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json()
-    } catch (error) {
-        console.error('Error in getEmplooyeeById:', error);
-        throw error
-    }
-}
-
-export async function checkEmail(email) {
-    try {
-        const response = await fetch(`${EMPLOYEE_API_BASE_URL}/check-email?email=${email}`)
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json()
-    } catch (error) {
-        console.error('Error in getEmplooyeeById:', error);
-        throw error
-    }
-}
-
-export async function updateEmployee(employeeId, employee) {
+export async function getEmplooyeeById(token, employeeId) {
     try {
         const response = await fetch(`${EMPLOYEE_API_BASE_URL}/${employeeId}`, {
-                            method: 'PUT',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(employee)
-                        })
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        })
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json()
+    } catch (error) {
+        console.error('Error in getEmplooyeeById:', error);
+        throw error
+    }
+}
+
+export async function checkEmail(token, email) {
+    try {
+        const response = await fetch(`${EMPLOYEE_API_BASE_URL}/check-email?email=${email}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        })
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json()
+    } catch (error) {
+        console.error('Error in getEmplooyeeById:', error);
+        throw error
+    }
+}
+
+export async function updateEmployee(token, employeeId, employee) {
+    try {
+        const response = await fetch(`${EMPLOYEE_API_BASE_URL}/${employeeId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(employee)
+        })
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}, body: ${response.json()}`);
         }
@@ -99,11 +113,14 @@ export async function updateEmployee(employeeId, employee) {
     }
 }
 
-export async function deleteEmployee(employeeId) {
+export async function deleteEmployee(token, employeeId) {
     try {
         const response = await fetch(`${EMPLOYEE_API_BASE_URL}/${employeeId}`, {
-                            method: 'DELETE'
-                        })
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        })
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }

@@ -6,14 +6,16 @@ import Title from '../../components/atoms/Title/Title'
 import Content from '../../components/atoms/Content/Content'
 import { useNavigate, useParams } from 'react-router-dom'
 import { deleteEmployee, getEmployees } from '../../services/employeeService'
+import { useUser } from '../../contexts/UserContext'
 
 export default function ErpEmployeePage() {
   const [employees, setEmployees] = useState([])
   const navigate = useNavigate()
+  const { user } = useUser()
 
   useEffect(() => {
     (async () => {
-      const result = await getEmployees()
+      const result = await getEmployees(user.token)
       setEmployees(result);
     })()
   }, [])
@@ -27,12 +29,12 @@ export default function ErpEmployeePage() {
   }
 
   function handleDeleteEmployOnClick(id) {
-    const message = `刪除員工會導致有相關欄位資料缺損
-    請確認是否刪除員工${employees.find((employee) => employee.id === id).lastName}`
+    const message = `刪除員工可能導致有相關欄位資料缺損
+    請確認是否刪除員工 [${employees.find((employee) => employee.id === id).displayName}]`
     const result = window.confirm(message);
     if (result) {
       (async () => {
-        const result = await deleteEmployee(id)
+        const result = await deleteEmployee(user.token, id)
         if(result)
           setEmployees(employees.filter( employee => employee.id != id ))
         else
@@ -54,11 +56,12 @@ export default function ErpEmployeePage() {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th> First Name</th>
-                <th> Last Name</th>
+                <th> Username</th>
+                <th> DisplayName</th>
                 <th> Email</th>
                 <th> Photo</th>
                 <th> Hire Date</th>
+                <th> Role</th>
                 <th> Actions</th>
               </tr>
             </thead>
@@ -66,13 +69,14 @@ export default function ErpEmployeePage() {
               { 
                 employees.map( employee =>
                     <tr key={employee.id}>
-                      <td> {employee.firstName}</td>
-                      <td> {employee.lastName}</td>
-                      <td> {employee.emailId}</td>
+                      <td> {employee.username}</td>
+                      <td> {employee.displayName}</td>
+                      <td> {employee.email}</td>
                       <td> 
                         <img src={getUrlFromBase64(employee.photo)} />
                       </td>
                       <td> {employee.hireDate}</td>
+                      <td> {employee.role}</td>
                       <td>
                         <Button onClick={() => {handleEditEmployOnClick(employee.id)}}>
                           修改

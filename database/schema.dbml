@@ -1,0 +1,102 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+table employee {
+  id integer [pk, increment]
+  username varchar [not null, unique, note: '員工ID, ex. E104001']
+  password varchar [not null]
+  display_name varchar [not null]
+  email varchar [not null, unique]
+  address varchar
+  photo blob
+  hire_date timestamp
+  status role [not null, default: 'EMPLOYEE']
+  source varchar [not null, note: 'Internal, LDAP, ...']
+}
+
+table customer {
+  id integer [pk, increment]
+  username varchar [not null, unique, note: '同 email']
+  password varchar [not null]
+  display_name varchar [not null]
+  email varchar [not null, unique]
+  address varchar
+  photo blob
+  created_date timestamp
+  status role [not null, default: 'CUSTOMER']
+  source varchar [not null, note: 'Internal, Google, ...']
+  cart char [note: 'JSON format']
+}
+
+enum role {
+  "ADMIN"
+  "EMPLOYEE"
+  "CUSTOMER"
+}
+
+table product {
+  id integer [pk, increment]
+  name varchar [not null]
+  description text
+  price integer [not null, default: 9999]
+  stock integer [not null, default: 0]
+  style varchar [note: 'color, idol']
+  category varchar [note: 'keyholder, clothes, nui']
+  image_url varchar
+  active integer [not null, default: 1, note: 'inactive: 0, active: 1']
+}
+
+table event {
+  id integer [pk, increment]
+  name varchar [not null]
+  description text
+  start_date timestamp
+  end_date timestamp
+  created_date timestamp
+  type integer [not null, default: 0, note: '0 for normal collection, 1 for real event']
+}
+
+table event_product {
+  id integer [pk, increment]
+  event_id integer 
+  product_id integer
+  discount decimal [not null, default: 1.0]
+}
+
+Ref: event_product.event_id > event.id
+Ref: event_product.product_id > product.id
+
+table order {
+  id integer [pk, increment]
+  customer_id integer [not null]
+  total_price integer [not null]
+  status varchar [not null, note: 'Pending, Paid, Shipped, Completed, Canceled']
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+  paid_at timestamp
+  shipped_at timestamp
+  completed_at timestamp
+}
+
+table order_item {
+  id integer [pk, increment]
+  order_id integer [not null]
+  product_id integer [not null]
+  quantity integer [not null, default: 1]
+  unit_price integer [not null]
+}
+
+table payment {
+  id integer [pk, increment]
+  order_id integer [not null]
+  payment_method varchar [not null, note: '信用卡, ...']
+  transaction_id varchar [note: '金流平台交易 id']
+  amount integer [not null]
+  status varchar [not null, note: 'PENDING, SUCCESS, FAILED']
+  created_at timestamp [default: 'now']
+}
+
+Ref: order.customer_id > customer.id
+Ref: order_item.order_id > order.id
+Ref: order_item.product_id > product.id
+Ref: payment.order_id > order.id

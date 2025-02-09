@@ -1,12 +1,6 @@
 package com.cathy.shopping.model;
 
-import com.cathy.shopping.repository.EmployeeRepository;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.Arrays;

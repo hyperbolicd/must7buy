@@ -1,5 +1,6 @@
 package com.cathy.shopping.controller;
 
+import com.cathy.shopping.dto.UploadImageResponse;
 import com.cathy.shopping.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,21 +21,13 @@ public class ProductController {
     private FileService fileService;
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestPart("file") MultipartFile file) {
+    public ResponseEntity<UploadImageResponse> uploadFile(@RequestPart("file") MultipartFile file) {
         String msg = "";
-        try {
-            msg +=  fileService.uploadProductPhoto(file);
-            msg += ", ";
-            msg += fileService.createThumbnail(file);
-//            byte[] photoBytes = null;
-//            if(photoFile != null)
-//                photoBytes = photoFile.getBytes();
-//            Employee createdEmployee = employeeService.createEmployee(employee, photoBytes);
-//            return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
-        } catch (IOException e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            return ResponseEntity.ok("FAIL:" + e.getMessage());
+        if(file.isEmpty()) {
+            UploadImageResponse response = new UploadImageResponse();
+            response.setMessage("No file found.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
-        return ResponseEntity.ok("SUCCESS: " + msg);
+        return ResponseEntity.ok(fileService.uploadProductPhoto(file));
     }
 }

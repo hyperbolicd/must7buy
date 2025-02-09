@@ -7,7 +7,9 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
+import com.cathy.shopping.dto.UploadImageResponse;
 import jakarta.annotation.PostConstruct;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,8 +18,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.file.Path;
-import java.util.Objects;
 
 @Service
 public class FileService {
@@ -50,15 +50,24 @@ public class FileService {
                 .build();
     }
 
-    public String uploadProductPhoto(MultipartFile file) throws IOException {
-//        String filePath = "";
-//        ObjectMetadata metadata = new ObjectMetadata();
-//        metadata.setContentType(file.getContentType());
-//        metadata.setContentLength(file.getSize());
-//        filePath = "product/" + file.getOriginalFilename();
-//        PutObjectResult result = s3Client.putObject(bucketName, filePath, file.getInputStream(), metadata);
-//        System.out.println("S3 upload result: " + result.getExpirationTime() + "/" + result.getContentMd5());
-        return uploadFile("product", file.getOriginalFilename(), file.getContentType(), file.getSize(), file.getInputStream());
+    public UploadImageResponse uploadProductPhoto(MultipartFile file) {
+        UploadImageResponse response = new UploadImageResponse();
+        try {
+            String fileExtension = getFileExtension(file);
+            String fileName = getMd5(file) + "." +fileExtension;
+            // upload origin size image
+            response.setPhotoPath(uploadFile(BASE_PATH, fileName, file.getContentType(), file.getSize(), file.getInputStream()));
+            // upload thumbnail
+            File thumbnail = createThumbnail(file.getInputStream(), fileExtension);
+            try (FileInputStream is = new FileInputStream(thumbnail)){
+                response.setThumbnailPath(uploadFile(BASE_PATH + "/" + THUMBNAIL_PATH, "thumbnail-" + fileName, file.getContentType(), thumbnail.length(), is));
+            }
+            response.setUploadResult(true);
+        } catch (IOException e) {
+            response.setMessage(e.getMessage());
+        }
+
+        return response;
     }
 
     public String uploadFile(String folder, String fileName, String contentType, long contentLength, InputStream inputStream) throws IOException {
@@ -71,32 +80,41 @@ public class FileService {
         return filePath;
     }
 
-    public String createThumbnail(MultipartFile file) throws IOException {
-        BufferedImage originImage = ImageIO.read(file.getInputStream());
-
-        int width = originImage.getWidth();
-        int height = originImage.getHeight();
-        int squareSize = Math.min(width, height);
-        int x = (width - squareSize) / 2;
-        int y = (height - squareSize) / 2;
-
-        BufferedImage croppedImage = originImage.getSubimage(x, y, squareSize, squareSize);
+    public File createThumbnail(InputStream is, String fileExtension) throws IOException {
+        BufferedImage originImage = ImageIO.read(is);
+        BufferedImage croppedImage = getSquareImage(originImage);
 
         BufferedImage resizedImage = new BufferedImage(WIDTH, HEIGHT, originImage.getType());
         Graphics2D g2d = resizedImage.createGraphics();
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g2d.drawImage(croppedImage, 0, 0, WIDTH, HEIGHT, null);
         g2d.dispose();
 
-        File tempFile = File.createTempFile("resized_", ".jpg");
+        File tempFile = File.createTempFile("resized_", "." + fileExtension);
         tempFile.deleteOnExit();
-        ImageIO.write(resizedImage, "jpg", tempFile);
+        ImageIO.write(resizedImage, fileExtension, tempFile);
 
-        tempFile.length();
-        System.out.println("圖片已儲存於臨時檔案: " + tempFile.getAbsolutePath());
+        return tempFile;
+    }
 
-//        File newFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
-//        ImageIO.write(resizedImage, "png", newFile);
-//        System.out.println("圖片已成功處理並輸出至 " + newFile.getAbsolutePath());
-        return uploadFile("product/thumbnail", file.getOriginalFilename(), file.getContentType(), tempFile.length(), new FileInputStream(tempFile));
+    public BufferedImage getSquareImage(BufferedImage image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        int squareSize = Math.min(width, height);
+        int x = (width - squareSize) / 2;
+        int y = (height - squareSize) / 2;
+        return image.getSubimage(x, y, squareSize, squareSize);
+    }
+
+    public String getFileExtension(MultipartFile file) {
+        final String fileName = file.getOriginalFilename();
+        String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+        return fileExtension.equals("jpeg") ? "jpg" : fileExtension;
+    }
+
+    public String getMd5(MultipartFile file) throws IOException {
+        return DigestUtils.md5Hex(file.getInputStream());
     }
 }

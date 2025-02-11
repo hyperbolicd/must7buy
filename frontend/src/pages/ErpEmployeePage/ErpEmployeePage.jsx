@@ -1,34 +1,43 @@
 import React, { useEffect, useState } from 'react'
-import styles from './ErpEmployeePage.module.css'
-import { getUrlFromBase64 } from '../../utils/util'
 import Button from '../../components/atoms/Button/Button'
 import Title from '../../components/atoms/Title/Title'
 import Content from '../../components/atoms/Content/Content'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { deleteEmployee, getEmployees } from '../../services/employeeService'
 import { useUser } from '../../contexts/UserContext'
+import Table from '../../components/atoms/Table/Table'
+import SubContent from '../../components/atoms/SubMenu/SubContent'
 
 export default function ErpEmployeePage() {
   const [employees, setEmployees] = useState([])
   const navigate = useNavigate()
   const { user } = useUser()
+  const theadMap = [
+    { name: 'Username', attribute: 'username'},
+    { name: 'DisplayName', attribute: 'displayName'},
+    { name: 'Email', attribute: 'email'},
+    { name: 'Photo', attribute: 'photo'},
+    { name: 'Hire Date', attribute: 'hireDate'},
+    { name: 'Role', attribute: 'role'},
+    { name: 'Actions', attribute: 'button'},
+  ]
 
   useEffect(() => {
     (async () => {
       const result = await getEmployees(user.token)
       setEmployees(result);
     })()
-  }, [])
+  }, [user])
 
-  function handleCreateEmployOnClick() {
+  function handleCreateEmployeeOnClick() {
     navigate(`../employee/_add`)
   }
 
-  function handleEditEmployOnClick(id) {
+  function handleEditEmployeeOnClick(id) {
     navigate(`../employee/${id}`)
   }
 
-  function handleDeleteEmployOnClick(id) {
+  function handleDeleteEmployeeOnClick(id) {
     const message = `刪除員工可能導致有相關欄位資料缺損
     請確認是否刪除員工 [${employees.find((employee) => employee.id === id).displayName}]`
     const result = window.confirm(message);
@@ -47,49 +56,25 @@ export default function ErpEmployeePage() {
     <div>
       <Title>員工列表</Title>
       <Content>
-        <div className={styles.buttonDiv}>
-          <Button onClick={handleCreateEmployOnClick} >
+        <SubContent position='right'>
+          <Button onClick={handleCreateEmployeeOnClick} >
             新增員工
           </Button>
-        </div>
+        </SubContent>
         <div>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th> Username</th>
-                <th> DisplayName</th>
-                <th> Email</th>
-                <th> Photo</th>
-                <th> Hire Date</th>
-                <th> Role</th>
-                <th> Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              { 
-                employees.map( employee =>
-                    <tr key={employee.id}>
-                      <td> {employee.username}</td>
-                      <td> {employee.displayName}</td>
-                      <td> {employee.email}</td>
-                      <td> 
-                        <img src={getUrlFromBase64(employee.photo)} />
-                      </td>
-                      <td> {employee.hireDate}</td>
-                      <td> {employee.role}</td>
-                      <td>
-                        <Button onClick={() => {handleEditEmployOnClick(employee.id)}}>
-                          修改
-                        </Button>
-                        <Button variant='warning' onClick={() => {handleDeleteEmployOnClick(employee.id)}}>
-                          刪除
-                        </Button>
-                      </td>
-                    </tr>
-                )
-              }
-            </tbody>
-          </table>
+          { // add buttons to data when render
+            employees.forEach( employee => {
+              employee.button = <div>
+                <Button onClick={() => {handleEditEmployeeOnClick(employee.id)}}>
+                  修改
+                </Button>
+                <Button variant='warning' onClick={() => {handleDeleteEmployeeOnClick(employee.id)}}>
+                  刪除
+                </Button>
+              </div>
+            })
+          }
+          <Table thead={theadMap} data={employees}></Table>
         </div>
       </Content>
     </div>

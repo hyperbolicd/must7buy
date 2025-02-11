@@ -6,6 +6,7 @@ import { debounce, getBase64FromUrl, getDataURLFromFile, getUrlFromBase64, image
 import Button from '../../components/atoms/Button/Button'
 import { createEmployee, getEmplooyeeById, updateEmployee } from '../../services/employeeService'
 import { useUser } from '../../contexts/UserContext'
+import SubContent from '../../components/atoms/SubMenu/SubContent'
 
 export default function SaveEmployeePage() {
   const params = useParams()
@@ -94,7 +95,7 @@ export default function SaveEmployeePage() {
     <div>
       <Title>{isCreate ? '新增員工資料' : '修改員工資料'}</Title>
       <Content>
-        <div className='card-body'>
+        <SubContent position='center'>
           <form>
             { !(isCreate) &&
               <div className='mb-3'>
@@ -152,7 +153,7 @@ export default function SaveEmployeePage() {
             <Button onClick={handleUpdateEmployClick}>Save</Button>
             <Button variant='warning' onClick={handleCancelClick}>Cancel</Button>
           </form>
-        </div>
+        </SubContent>
       </Content>
     </div>
   )

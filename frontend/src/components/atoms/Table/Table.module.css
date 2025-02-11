@@ -1,0 +1,14 @@
+.table {
+    margin: auto;
+    img {
+        width: 100%;
+        height: 80px;
+    }
+    th {
+        min-width:80px;
+        
+    }
+    td {
+        text-align: center;
+    }
+}

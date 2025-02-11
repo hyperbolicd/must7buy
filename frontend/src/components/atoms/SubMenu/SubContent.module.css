@@ -1,0 +1,13 @@
+.right {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+.inner {
+    display: inline-block;
+}

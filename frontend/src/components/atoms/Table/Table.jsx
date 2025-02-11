@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { env } from '../../../configs/config'
-import { getThumbnailUrl } from '../../../utils/util'
+import { getThumbnailUrl, getUrlFromBase64 } from '../../../utils/util'
 import styles from './Table.module.css'
 
 export default function Table({ onClick, type = 'table', thead, data }) {
@@ -33,6 +33,8 @@ export default function Table({ onClick, type = 'table', thead, data }) {
                 thead.map( th => {
                   if(th.attribute === 'imageUrl')
                     return (<th key={th.attribute}> <img src={`${env.MEDIA_SOURCE_URL}/${getThumbnailUrl(row[th.attribute])}`} /> </th>)
+                  else if(th.attribute === 'photo')
+                    return (<th key={th.attribute}> <img src={getUrlFromBase64(row[th.attribute])} /> </th>)
                   else
                     return (<td key={th.attribute}> {row[th.attribute]} </td>)
                 })

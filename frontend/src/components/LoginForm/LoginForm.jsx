@@ -52,8 +52,7 @@ export default function LoginForm() {
       } else {
         // result = await loginCustomer(tmpUser)
       }
-
-      console.log(result)
+      
       if(result) {
         // navigate('../employees')
         const user = {
@@ -69,21 +68,19 @@ export default function LoginForm() {
   }
 
   return (
-    <div className='card-body'>
-        <form>
-            <div className='mb-3'>
-            <label>Username: </label>
-            <input placeholder='Username' name='username' className='form-control'
-                defaultValue={username} onChange={debouncedChangeHandler}/>
-            </div>
-            <div className='mb-3'>
-            <label>Password: </label>
-            <input placeholder='Password' name='password' className='form-control' type={isHidden ? 'password':'text'}
-                defaultValue={password} onChange={(e) => debouncedChangeHandler(e)}/>
-            <span onClick={handleShowPasswordClick}>  {isHidden ? 'Show':'Hide'} Password </span>
-            </div>
-            <Button onClick={handleLoginClick}>Login</Button>
-        </form>
-    </div>
+    <form>
+      <div className='mb-3'>
+      <label>Username: </label>
+      <input placeholder='Username' name='username' className='form-control'
+          defaultValue={username} onChange={debouncedChangeHandler}/>
+      </div>
+      <div className='mb-3'>
+      <label>Password: </label>
+      <input placeholder='Password' name='password' className='form-control' type={isHidden ? 'password':'text'}
+          defaultValue={password} onChange={(e) => debouncedChangeHandler(e)}/>
+      <span onClick={handleShowPasswordClick}>  {isHidden ? 'Show':'Hide'} Password </span>
+      </div>
+      <Button onClick={handleLoginClick}>Login</Button>
+    </form>
   )
 }

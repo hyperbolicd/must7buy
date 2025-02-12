@@ -21,6 +21,10 @@ export function getUrlFromBase64(base64) {
     }
 }
 
+export function defaultDebounce(func) {
+    return debounce(func, 200)
+}
+
 export function debounce(func, delay) {
     let timer;
 
@@ -51,4 +55,8 @@ export const imageAcceptSize = 4 * 1024 // 4MB
 
 export function validImageSize(size) {
     return size <= imageAcceptSize
+}
+
+export function getThumbnailUrl(imageUrl) { // 'product/xxx.jpg' -> 'product/thumbnail/thumbnail-xxx.jpg'
+    return imageUrl.split('/')[0] + '/thumbnail/thumbnail-' + imageUrl.split('/')[1]
 }

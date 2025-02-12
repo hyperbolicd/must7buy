@@ -72,6 +72,7 @@ export default function ErpBulkSaveProductPage() {
           console.log(dataUrl)
           targetProduct['directUrl'] = dataUrl
           targetProduct['image'] = file
+          setProducts(updatedProducts)
         })(file)
       } else {
         alert('僅接受 .png 及 .jpeg 且不大於 4MB')
@@ -85,8 +86,8 @@ export default function ErpBulkSaveProductPage() {
       console.log(tr)
 
       targetProduct[name] = value
+      setProducts(updatedProducts)
     }
-    setProducts(updatedProducts)
     console.log(products)
   } 
 

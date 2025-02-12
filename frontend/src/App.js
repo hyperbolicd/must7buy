@@ -11,6 +11,7 @@ import SaveEmployeePage from './pages/SaveEmployeePage/SaveEmployeePage';
 import ErpLoginPage from './pages/ErpLoginPage/ErpLoginPage';
 import { UserProvider } from './contexts/UserContext';
 import PrivateRoute from './router/PrivateRouter';
+import ErpBulkSaveProductPage from './pages/ErpBulkSaveProductPage/ErpBulkSaveProductPage';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
               <Route index element={<ErpHomepage />}></Route>
               <Route path='login' element={<ErpLoginPage />}></Route>
               <Route path='products' exact element={<ErpProductPage />}></Route>
+              <Route path='products/:action' exact element={<ErpBulkSaveProductPage />}></Route>
               <Route path='employees' exact element={<ErpEmployeePage />}></Route>
               <Route path='employee/:id' element={<SaveEmployeePage />}></Route>
               <Route path="*" element={<ErpHomepage />}></Route>

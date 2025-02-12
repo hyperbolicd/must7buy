@@ -55,15 +55,17 @@ export default function ErpBulkSaveProductPage() {
     const updatedProducts = structuredClone(products)
     console.log(updatedProducts)
     
-    if(name === 'image' && files[0]) {
+    if(name === 'image') {
+      if(!files[0]) return;
+      const file = files[0]
+      console.log(file)
+
       const tr = e.target.parentElement.parentElement.parentElement
       const trId = tr.getAttribute('name')
       const targetProduct = updatedProducts.find(product => 
         `${product.tmpId}` === trId
       )
-
-      const file = files[0]
-      console.log(file)
+      
       if(imageAcceptType.includes(file.type) && validImageSize(file.size)) {
         (async (file) => {
           const dataUrl = await getDataURLFromFile(file)
@@ -167,7 +169,6 @@ export default function ErpBulkSaveProductPage() {
           <Button onClick={handleAddClick} variant='secondary'>+</Button>
           <Button onClick={handleCreateClick}>新增</Button>
         </SubContent>
-        { console.log("here=" + productsToColumns())}
         <Table thead={theadMap} data={productsToColumns()}></Table>
       </Content>
     </div>

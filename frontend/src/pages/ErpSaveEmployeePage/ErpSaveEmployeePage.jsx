@@ -45,7 +45,8 @@ export default function ErpSaveEmployeePage() {
     const {name, value, files} = e.target
     const updatedEmployee = { ...employee }
 
-    if(name === 'photo' && files[0]) {
+    if(name === 'photo') {
+      if(!files[0]) return;
       const file = files[0]
       console.log(file)
       if(imageAcceptType.includes(file.type) && validImageSize(file.size)) {

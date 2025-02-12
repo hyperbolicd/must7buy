@@ -51,7 +51,7 @@ export function getBase64FromUrl(url) {
 
 export const imageAcceptType = 'image/png, image/jpeg'
 
-export const imageAcceptSize = 4 * 1024 // 4MB
+export const imageAcceptSize = 4 * 1024 * 1024// 4MB
 
 export function validImageSize(size) {
     return size <= imageAcceptSize

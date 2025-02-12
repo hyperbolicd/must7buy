@@ -8,7 +8,7 @@ import { createEmployee, getEmplooyeeById, updateEmployee } from '../../services
 import { useUser } from '../../contexts/UserContext'
 import SubContent from '../../components/atoms/SubMenu/SubContent'
 
-export default function SaveEmployeePage() {
+export default function ErpSaveEmployeePage() {
   const params = useParams()
   const [employee, setEmployee] = useState({
     id: '',

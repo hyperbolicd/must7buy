@@ -7,7 +7,7 @@ import ErpProductPage from './pages/ErpProductPage/ErpProductPage';
 import MainPage from './pages/MainPage';
 import ErpHomepage from './pages/ErpHomepage/ErpHomepage';
 import ErpEmployeePage from './pages/ErpEmployeePage/ErpEmployeePage';
-import SaveEmployeePage from './pages/SaveEmployeePage/SaveEmployeePage';
+import ErpSaveEmployeePage from './pages/ErpSaveEmployeePage/ErpSaveEmployeePage';
 import ErpLoginPage from './pages/ErpLoginPage/ErpLoginPage';
 import { UserProvider } from './contexts/UserContext';
 import PrivateRoute from './router/PrivateRouter';
@@ -32,7 +32,7 @@ function App() {
               <Route path='products' exact element={<ErpProductPage />}></Route>
               <Route path='products/:action' exact element={<ErpBulkSaveProductPage />}></Route>
               <Route path='employees' exact element={<ErpEmployeePage />}></Route>
-              <Route path='employee/:id' element={<SaveEmployeePage />}></Route>
+              <Route path='employee/:id' element={<ErpSaveEmployeePage />}></Route>
               <Route path="*" element={<ErpHomepage />}></Route>
             </Route>
           </Routes>

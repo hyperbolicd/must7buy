@@ -98,40 +98,40 @@ export default function SaveEmployeePage() {
         <SubContent position='center'>
           <form>
             { !(isCreate) &&
-              <div className='mb-3'>
+              <div>
                 <label>Username: </label>
                 <span>{employee.username}</span>
               </div>
             }
-            <div className='mb-3'>
+            <div>
               <label>Display Name: </label>
-              <input placeholder='Display Name' name='displayName' className='form-control'
+              <input placeholder='Display Name' name='displayName' 
                 defaultValue={employee.displayName} onChange={(e) => debouncedChangeHandler(e)}/>
             </div>
             { isCreate &&
-              <div className='mb-3'>
+              <div>
                 <label>Password: </label>
-                <input placeholder='Password' name='password' className='form-control'
+                <input placeholder='Password' name='password' 
                   defaultValue={employee.password} onChange={debouncedChangeHandler}/>
               </div>
             }
-            <div className='mb-3'>
+            <div>
               <label htmlFor='label-email'>Email: </label>
-              <input type='email' placeholder='Email' name='email' id='label-email' className='form-control'
+              <input type='email' placeholder='Email' name='email' id='label-email' 
                 defaultValue={employee.email} onChange={(e) => debouncedChangeHandler(e)}/>
             </div>
-            <div className='mb-3'>
+            <div>
               <label>Address: </label>
-              <input placeholder='Address' name='address' className='form-control'
+              <input placeholder='Address' name='address' 
                 defaultValue={employee.address} onChange={(e) => debouncedChangeHandler(e)}/>
             </div>
-            <div className='mb-3'>
+            <div>
               <label>Hire Date: </label>
-              <input type='date' placeholder='Hire Date' name='hireDate' id='label-hireDate' className='form-control'
+              <input type='date' placeholder='Hire Date' name='hireDate' id='label-hireDate' 
                 defaultValue={employee.hireDate} onChange={(e) => debouncedChangeHandler(e)}/>
             </div>
             { !(isCreate) &&
-              <div className='mb-3'>
+              <div>
                 <label>Role: </label>
                 <select name='role' onChange={(e) => debouncedChangeHandler(e)}>
                   <option selected={ employee.role === 'EMPLOYEE' ? 'selected' : ''}> EMPLOYEE </option>
@@ -139,16 +139,16 @@ export default function SaveEmployeePage() {
                 </select>
               </div>
             } 
-            <div className='mb-3'>
+            <div>
               <label>Photo: </label>
               <img src={photoUrl} />
             </div>
-            <div className='mb-3'>
+            <div>
               <label>Update Photo: <label style={{ color: 'red'}}>僅接受 .png 及 .jpeg 且不大於 4MB </label></label>
-              <input type='file' name='photo' className='form-control'
+              <input type='file' name='photo' 
                 defaultValue={employee.photo} accept={imageAcceptType} onChange={(e) => debouncedChangeHandler(e)}/>
             </div>
-            <div className='mb-3'>
+            <div>
             </div>
             <Button onClick={handleUpdateEmployClick}>Save</Button>
             <Button variant='warning' onClick={handleCancelClick}>Cancel</Button>

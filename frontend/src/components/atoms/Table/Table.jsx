@@ -28,13 +28,15 @@ export default function Table({ onClick, type = 'table', thead, data }) {
       <tbody>
         { 
           data.map(row => (
-            <tr key={row.id}>
+            <tr key={row.id} name={ row.tmpId ? row.tmpId : row.id}>
               {
                 thead.map( th => {
-                  if(th.attribute === 'imageUrl')
+                  if(th.attribute === 'imageUrl' && row[th.attribute]) // aws
                     return (<th key={th.attribute}> <img src={`${env.MEDIA_SOURCE_URL}/${getThumbnailUrl(row[th.attribute])}`} /> </th>)
-                  else if(th.attribute === 'photo')
+                  else if(th.attribute === 'photo' && row[th.attribute]) // blob
                     return (<th key={th.attribute}> <img src={getUrlFromBase64(row[th.attribute])} /> </th>)
+                  else if(th.attribute === 'directUrl' && row[th.attribute]) // preview
+                    return (<th key={th.attribute}> <img src={row[th.attribute]} /> </th>)
                   else
                     return (<td key={th.attribute}> {row[th.attribute]} </td>)
                 })

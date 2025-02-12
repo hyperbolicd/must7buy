@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import Button from '../atoms/Button/Button'
-import { debounce } from '../../utils/util'
+import { debounce, defaultDebounce } from '../../utils/util'
 import { useUser } from '../../contexts/UserContext'
 import { login as loginEmployee } from '../../services/employeeService'
 import { useNavigate } from 'react-router-dom'
 
 export default function LoginForm() {
-  const { user, setUser, isBackend } = useUser()
+  const { user, isBackend, login } = useUser()
   const navigate = useNavigate()
   const [username, setUsername] = useState()
   const [password, setPassword] = useState()
@@ -33,7 +33,7 @@ export default function LoginForm() {
     }
   } 
 
-  const debouncedChangeHandler = debounce(changeHandler, 500)
+  const debouncedChangeHandler = defaultDebounce(changeHandler)
 
   function handleShowPasswordClick() {
     setIsHidden(!isHidden)
@@ -60,7 +60,7 @@ export default function LoginForm() {
           token: result.token,
           expiresIn: result.expiresIn
         }
-        setUser(user)
+        login(user)
       } else {
         alert('帳號或密碼不存在')
       }

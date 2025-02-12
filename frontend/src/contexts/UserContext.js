@@ -15,6 +15,14 @@ export const UserProvider = ({ children }) => {
         return JSON.parse(localStorage.getItem(storageKey)) || null
     })
 
+    function login(user) {
+        setUser(user)
+    }
+
+    function logout() {
+        setUser(null)
+    }
+
      // 當 user 變更時，儲存到 localStorage
     useEffect(() => {
         if(user) {
@@ -26,7 +34,7 @@ export const UserProvider = ({ children }) => {
 
     // 提供 setUser 方法讓其他 Component 也可以更新 User 狀態
     return (
-        <UserContext.Provider value={{ user, setUser, isBackend }}>
+        <UserContext.Provider value={{ user, isBackend, login, logout }}>
             {children}
         </UserContext.Provider>
     )

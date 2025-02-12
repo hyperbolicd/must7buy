@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useUser } from '../../contexts/UserContext'
 
 export default function ErpHeader() {
-  const { user, setUser, isBackend } = useUser()
+  const { user, logout } = useUser()
 
   const navs = [
     { name: '商品管理', path: 'products', isOpen: true},
@@ -16,7 +16,7 @@ export default function ErpHeader() {
   ]
 
   function handleLogoutClick() {
-    setUser(null)
+    logout()
   }
 
   return (

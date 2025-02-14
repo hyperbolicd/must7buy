@@ -11,6 +11,7 @@ import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//@PreAuthorize("hasAuthority('EMPLOYEE')")
 @RestController
 @RequestMapping("/api/v1/employees")
 public class EmployeeController {
@@ -65,6 +67,7 @@ public class EmployeeController {
     }
 
     // validate email is available
+//    @PreAuthorize("permitAll()") // -> Class 等級有 @PreAuthorize("hasAuthority('USER')") 時可用，但 SecurityFilterChain 條件 .anyRequest().authenticated() 時無法到達而無效
     @GetMapping("/check-email")
     public ResponseEntity<Map<String, Boolean>> checkEmail(@RequestParam String email) {
         Boolean isValid = !employeeService.existsByEmail(email);
@@ -81,6 +84,7 @@ public class EmployeeController {
     }
 
     // delete employee rest api
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable long id) {
         boolean isDeleted = employeeService.deleteEmployee(id);
@@ -91,7 +95,7 @@ public class EmployeeController {
         }
     }
 
-    @PermitAll
+    // @PermitAll -> 需用 @EnableMethodSecurity(jsr250Enabled = true) 實測不行未解
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody Employee employee) {
         JwtResponse jwtResponse = authService.verify(employee);

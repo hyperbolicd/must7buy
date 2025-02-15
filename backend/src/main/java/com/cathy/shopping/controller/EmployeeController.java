@@ -2,6 +2,7 @@ package com.cathy.shopping.controller;
 
 import com.cathy.shopping.dto.JwtResponse;
 import com.cathy.shopping.exception.ResourceNotFountException;
+import com.cathy.shopping.model.Customer;
 import com.cathy.shopping.model.Employee;
 import com.cathy.shopping.model.User;
 import com.cathy.shopping.repository.EmployeeRepository;
@@ -98,6 +99,7 @@ public class EmployeeController {
     // @PermitAll -> 需用 @EnableMethodSecurity(jsr250Enabled = true) 實測不行未解
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody Employee employee) {
+        Employee validUser = employeeService.getEmployeeByUsername(employee.getUsername());
         JwtResponse jwtResponse = authService.verify(employee);
         return ResponseEntity.ok(jwtResponse);
     }

@@ -1,8 +1,10 @@
 package com.cathy.shopping.service;
 
 import com.cathy.shopping.exception.ResourceNotFountException;
+import com.cathy.shopping.model.Customer;
 import com.cathy.shopping.model.Employee;
 import com.cathy.shopping.repository.EmployeeRepository;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -80,5 +82,10 @@ public class EmployeeService {
         int sequence = (lastUsername != null) ? Integer.parseInt(lastUsername.substring(lastUsername.length() - 3)) + 1 : 1;
         // 格式化為 "E2024001"
         return "E" + year + String.format("%03d", sequence);
+    }
+
+    public Employee getEmployeeByUsername(String username) {
+        return (Employee) employeeRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFountException("Customer not exist with username: " + username));
     }
 }

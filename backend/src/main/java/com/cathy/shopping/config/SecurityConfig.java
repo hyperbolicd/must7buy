@@ -2,6 +2,7 @@ package com.cathy.shopping.config;
 
 import com.cathy.shopping.filter.JwtFilter;
 import com.cathy.shopping.service.AppUserDetailsService;
+import jakarta.servlet.DispatcherType;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,7 +46,10 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(request -> request
+                        .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
                         .requestMatchers("api/v1/employees/login").permitAll()
+                        .requestMatchers("api/v1/customers/registry").permitAll()
+                        .requestMatchers("api/v1/customers/login").permitAll()
                         .anyRequest().authenticated()
 //                                .anyRequest().permitAll()
                 )

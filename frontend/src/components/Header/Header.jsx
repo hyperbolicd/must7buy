@@ -7,8 +7,11 @@ import { useNavigate } from 'react-router-dom'
 import LoginIcon from '../../assets/LoginIcon'
 import CartIcon from '../../assets/CartIcon'
 import ArrowRightIcon from '../../assets/ArrowRightIcon'
+import { useUser } from '../../contexts/UserContext'
+import ProfileIcon from '../../assets/ProfileIcon'
 
 export default function Header() {
+  const { user, isBackend, login, logout } = useUser()
   const navigate = useNavigate()
   const categories = [
     { name: '衣服', keywords: 'cloths'},
@@ -41,6 +44,10 @@ export default function Header() {
 
   function handleLoginClick() {
     navigate('/login')
+  }
+
+  function handleProfileClick() {
+    navigate('/me')
   }
 
   function handleCartClick() {
@@ -110,11 +117,20 @@ export default function Header() {
             <CartIcon width='50%'/>
           </Button>
         </div>
-        <div className={styles.profile}>
-          <Button variant='transparent' onClick={handleLoginClick}>
-            <LoginIcon width='50%'/>
-          </Button>
-        </div>
+        { user &&
+          <div className={styles.profile}>
+            <Button variant='transparent' onClick={handleProfileClick}>
+              <ProfileIcon width='50%'/>
+            </Button>
+          </div>
+        }
+        { !user &&
+          <div className={styles.profile}>
+            <Button variant='transparent' onClick={handleLoginClick}>
+              <LoginIcon width='50%'/>
+            </Button>
+          </div>
+        }
         { option === 'A' &&
           <div className={styles.submenu}>
             <div className={styles.ulTitle}>

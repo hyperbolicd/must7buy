@@ -2,7 +2,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 
 const PrivateRoute = ({ children }) => {
-  const { user } = useUser()
+  const { user, isBackend } = useUser()
   const location = useLocation()
   
   console.log('location:'+ location.pathname)
@@ -10,7 +10,7 @@ const PrivateRoute = ({ children }) => {
     return children;
   }
 
-  return user ? children : <Navigate to="/erp/login" replace />
+  return user ? children : <Navigate to={ isBackend ? '/erp/login' : '/login'} replace />
 }
 
 export default PrivateRoute;

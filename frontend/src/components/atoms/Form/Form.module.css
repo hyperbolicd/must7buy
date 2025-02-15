@@ -1,0 +1,28 @@
+:root {
+    --input-width: 200px;
+    --form-padding: 40px;
+}
+
+.form {
+    margin: 0px 1%;
+    padding: var(--form-padding);
+    border-radius: 1.5rem;
+    background-color: rgb(242, 237, 217);
+    min-width: calc(var(--input-width) + var(--form-padding));
+    div {
+       margin: 20px 0px; 
+    }
+    div:first-child {
+        margin-top: 0;
+    }
+    div:last-child {
+        margin-bottom: 0;
+    }
+    :global(.center) {
+        text-align: center;
+    }
+    input {
+        height: 30px;
+        width: var(--input-width);
+    }
+}

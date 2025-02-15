@@ -60,3 +60,8 @@ export function validImageSize(size) {
 export function getThumbnailUrl(imageUrl) { // 'product/xxx.jpg' -> 'product/thumbnail/thumbnail-xxx.jpg'
     return imageUrl.split('/')[0] + '/thumbnail/thumbnail-' + imageUrl.split('/')[1]
 }
+
+export function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}

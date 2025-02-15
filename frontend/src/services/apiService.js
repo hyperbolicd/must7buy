@@ -9,7 +9,7 @@ const fetchData = async (url, options = {}) => {
 
         try {
             const errorData = await response.json();
-            errorMessage = errorData;
+            errorMessage = errorData.error === undefined ? errorData : errorData.error;
         } catch (e) {
             // 忽略 JSON parse 錯誤
         }

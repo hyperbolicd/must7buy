@@ -1,13 +1,19 @@
 .right {
     display: flex;
     justify-content: flex-end;
+    flex-wrap: wrap;
 }
 
 .center {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
-.inner {
+.inline-block {
     display: inline-block;
+}
+
+.gap-s {
+    gap: 20px;
 }

@@ -18,7 +18,7 @@ export default function Table({ onClick, type = 'table', thead, data }) {
           { !onClick && handleTheadOnClick() }
       }}>
         <tr>
-          {
+          { thead &&
             thead.map( th => {
               return(<th key={th.attribute}> {th.name} </th>)
             })
@@ -26,7 +26,7 @@ export default function Table({ onClick, type = 'table', thead, data }) {
         </tr>
       </thead>
       <tbody>
-        { 
+        { data &&
           data.map(row => (
             <tr key={row.id} name={ row.tmpId ? row.tmpId : row.id}>
               {

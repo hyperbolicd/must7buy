@@ -1,9 +1,11 @@
 package com.cathy.shopping.service;
 
 import com.cathy.shopping.model.AppUserDetails;
+import com.cathy.shopping.model.Customer;
+import com.cathy.shopping.model.Employee;
 import com.cathy.shopping.model.User;
+import com.cathy.shopping.repository.CustomerRepository;
 import com.cathy.shopping.repository.EmployeeRepository;
-import com.cathy.shopping.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,12 +20,15 @@ public class AppUserDetailsService implements UserDetailsService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @Autowired
+    private CustomerRepository customerRepository;
+
     public Optional<User> findByUsername(String username) {
-        User user = employeeRepository.findByUsername(username).get();
-//        if (user.isEmpty()) {
-//            user = customerRepository.findByUsername(username);
-//        }
-        return Optional.of(user);
+        Optional<User> user = employeeRepository.findByUsername(username);
+        if (user.isEmpty()) {
+            user = customerRepository.findByUsername(username);
+        }
+        return user;
     }
 
     @Override

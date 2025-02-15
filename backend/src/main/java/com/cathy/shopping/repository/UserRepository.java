@@ -1,15 +1,13 @@
 package com.cathy.shopping.repository;
 
-import com.cathy.shopping.model.Employee;
 import com.cathy.shopping.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @NoRepositoryBean
 public interface UserRepository<T extends User> extends JpaRepository<T, Long> {
     boolean existsByEmail(String email);
-    Optional<T> findByUsername(String username);
+    Optional<User> findByUsername(String username);
 }

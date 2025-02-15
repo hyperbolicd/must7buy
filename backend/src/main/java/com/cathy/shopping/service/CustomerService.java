@@ -4,6 +4,7 @@ import com.cathy.shopping.exception.ResourceNotFountException;
 import com.cathy.shopping.model.Customer;
 import com.cathy.shopping.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,9 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Autowired
+    private PasswordEncoder encoder;
+
     // Add service methods here
     
     public List<Customer> getAllCustomers() {
@@ -21,12 +25,20 @@ public class CustomerService {
     }
 
     public Customer createCustomer(Customer customer) {
+        customer.setDisplayName(customer.getUsername());
+        customer.setEmail(customer.getUsername());
+        customer.setPassword(encoder.encode(customer.getPassword()));
         return customerRepository.save(customer);
     }
 
     public Customer getCustomerById(Long id) {
         return customerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFountException("Customer not exist with id: " + id));
+    }
+
+    public Customer getCustomerByUsername(String username) {
+        return (Customer) customerRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFountException("Customer not exist with username: " + username));
     }
     
     public Customer updateCustomer(Long id, Customer updatedCustomer) {
@@ -39,7 +51,8 @@ public class CustomerService {
         customerRepository.delete(customer);
         return true;
     }
-    
 
-    
+    public boolean existsByEmail(String email) {
+        return customerRepository.existsByEmail(email);
+    }
 }

@@ -31,9 +31,9 @@ export default function Table({ onClick, type = 'table', thead, data }) {
             <tr key={row.id} name={ row.tmpId ? row.tmpId : row.id}>
               {
                 thead.map( th => {
-                  if(th.attribute === 'imageUrl' && row[th.attribute]) // aws
+                  if(th.attribute === 'imageUrl') // aws
                     return (<th key={th.attribute}> <img src={`${env.MEDIA_SOURCE_URL}/${getThumbnailUrl(row[th.attribute])}`} /> </th>)
-                  else if(th.attribute === 'photo' && row[th.attribute]) // blob
+                  else if(th.attribute === 'photo') // blob
                     return (<th key={th.attribute}> <img src={getUrlFromBase64(row[th.attribute])} /> </th>)
                   else if(th.attribute === 'directUrl' && row[th.attribute]) // preview
                     return (<th key={th.attribute}> <img src={row[th.attribute]} /> </th>)

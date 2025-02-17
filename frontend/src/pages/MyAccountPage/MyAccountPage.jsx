@@ -7,7 +7,8 @@ import SubContent from '../../components/atoms/SubMenu/SubContent'
 import Form from '../../components/atoms/Form/Form'
 import Table from '../../components/atoms/Table/Table'
 import Button from '../../components/atoms/Button/Button'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { getMyOrders } from '../../services/orderService'
 
 export default function MyAccountPage() {
   const { user, isBackend, login, logout } = useUser()
@@ -26,7 +27,9 @@ export default function MyAccountPage() {
     { name: '付款日期', attribute: 'updatedDate'},
     { name: '總金額', attribute: 'totalPrice'},
     { name: '訂單狀態', attribute: 'status'},
+    { name: '查看', attribute: 'link'},
   ]
+  const [orders, setOrders] = useState([])
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -34,14 +37,21 @@ export default function MyAccountPage() {
     (async () => {
       const result = await getCustomerByUsername(user.token, user.username);
       console.log(result);
-      // latest 3 orders
       setMe(result);
     })()
   }, [])
 
+  useEffect(() => {
+    (async () => {
+      const result = await getMyOrders(user.token)
+      console.log(result);
+      setOrders(result);
+    })()
+  }, [])
+
   function handleLogoutClick() {
+    navigate('/home')
     logout(user)
-    navigate('/')
   }
 
   function handleUpdateClick() {
@@ -78,7 +88,12 @@ export default function MyAccountPage() {
             </Form>
             <SubContent>
               <Title>近期訂單<Button onClick={handleOrderClick} variant='transparnet'>歷史訂單</Button></Title>
-              <Table thead={theadMap}></Table>
+              { orders &&
+                orders.forEach(order => {
+                  order.link = <Link to={`/me/orders/${order.id}`}>查看</Link>
+                })
+              }
+              <Table thead={theadMap} data={orders}></Table>
             </SubContent>
           </SubContent>
       </Content>

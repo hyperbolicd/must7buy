@@ -1,5 +1,6 @@
 package com.cathy.shopping.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
 
@@ -40,6 +41,7 @@ public class Order {
     @Column(name = "completed_at")
     private LocalDate completedAt;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "order")
     private Payment payment;
 

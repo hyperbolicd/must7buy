@@ -28,6 +28,11 @@ public class PaymentService {
         return paymentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFountException("Payment not exist with id: " + id));
     }
+
+    public Payment getPaymentByTransactionId(String transactionId) {
+        return paymentRepository.findPaymentByTransactionId(transactionId)
+                .orElseThrow(() -> new ResourceNotFountException("Payment not exist with transaction id: " + transactionId));
+    }
     
     public Payment updatePayment(Integer id, Payment updatedPayment) {
         Payment existingPayment = getPaymentById(id);

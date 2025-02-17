@@ -17,6 +17,7 @@ import MyAccountPage from './pages/MyAccountPage/MyAccountPage';
 import ProductSearchPage from './pages/ProductSearchPage/ProductSearchPage';
 import { CartProvider } from './contexts/CartContext';
 import ProductCartPage from './pages/ProductCartPage/ProductCartPage';
+import MyOrderPage from './pages/MyOrderPage/MyOrderPage';
 
 function App() {
   return (
@@ -28,6 +29,9 @@ function App() {
               <Route index element={<Homepage />}></Route>
               <Route path='login' element={<LoginPage />}></Route>
               <Route path='me' exact element={<PrivateRoute><MyAccountPage /></PrivateRoute>}></Route>
+              <Route path='me/orders/:id' element={<PrivateRoute><MyOrderPage /></PrivateRoute>}></Route>
+              <Route path='me/orders/:id/payment/authorize' element={<PrivateRoute><MyOrderPage /></PrivateRoute>}></Route>
+              <Route path='me/orders/:id/payment/cancel' element={<PrivateRoute><MyOrderPage /></PrivateRoute>}></Route>
               <Route path="search" element={<ProductSearchPage />}></Route>
               <Route path="cart" element={<ProductCartPage />}></Route>
               <Route path='test' exact element={<TestPage />}></Route>

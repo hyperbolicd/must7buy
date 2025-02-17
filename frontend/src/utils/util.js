@@ -58,7 +58,9 @@ export function validImageSize(size) {
 }
 
 export function getThumbnailUrl(imageUrl) { // 'product/xxx.jpg' -> 'product/thumbnail/thumbnail-xxx.jpg'
-    return imageUrl.split('/')[0] + '/thumbnail/thumbnail-' + imageUrl.split('/')[1]
+    if(imageUrl === null || imageUrl === undefined || !imageUrl.includes('/')) return "blank.png";
+    else
+        return imageUrl.split('/')[0] + '/thumbnail/thumbnail-' + imageUrl.split('/')[1]
 }
 
 export function isValidEmail(email) {

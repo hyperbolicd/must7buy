@@ -2,6 +2,8 @@ package com.cathy.shopping.filter;
 
 import com.cathy.shopping.service.AppUserDetailsService;
 import com.cathy.shopping.service.JwtService;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,21 +34,29 @@ public class JwtFilter extends OncePerRequestFilter {
         String jwt = null;
         String username = null;
 
-        if(authHeader != null && authHeader.startsWith("Bearer ")) {
-            jwt = authHeader.substring(7);
-            username = jwtService.extractUsername(jwt);
-        }
-
-        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
-            UserDetails userDetails = appUserDetailsService.loadUserByUsername(username);
-
-            if(jwtService.validateToken(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+        try {
+            if(authHeader != null && authHeader.startsWith("Bearer ")) {
+                jwt = authHeader.substring(7);
+                username = jwtService.extractUsername(jwt);
             }
+            if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = appUserDetailsService.loadUserByUsername(username);
+
+                    if(jwtService.validateToken(jwt, userDetails)) {
+                        UsernamePasswordAuthenticationToken authToken =
+                                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(authToken);
+                    }
+            }
+        } catch (ExpiredJwtException e) {
+            SecurityContextHolder.clearContext();
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT token has expired");
+            return;
+        } catch (JwtException e) {
+            SecurityContextHolder.clearContext();
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT token");
+            return;
         }
 
         filterChain.doFilter(request, response);

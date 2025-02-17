@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -27,6 +28,7 @@ public class CustomerController {
     @Autowired
     AuthService authService;
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','EMPLOYEE')")
     @GetMapping
     public ResponseEntity<List<Customer>> getAllCustomers() {
         List<Customer> customers = customerService.getAllCustomers();
@@ -82,6 +84,20 @@ public class CustomerController {
         Customer validUser = customerService.getCustomerByUsername(customer.getUsername());
         JwtResponse jwtResponse = authService.verify(customer);
         return ResponseEntity.ok(jwtResponse);
+    }
+
+    @GetMapping("/cart")
+    public ResponseEntity<Customer.Cart> getCart() {
+        return ResponseEntity.ok(customerService.getCart());
+    }
+
+    @PutMapping("/cart")
+    public ResponseEntity<Customer> updateCart(@RequestBody Customer.Cart cart) {
+        cart.getItems().forEach(cartItem -> {
+            System.out.println(cartItem.getName() + " " + cartItem.getStyle() + ":" + cartItem.getQuantity() + "," + cartItem.getPrice());
+        });
+        Customer updatedCustomer = customerService.updateCart(cart);
+        return ResponseEntity.ok(updatedCustomer);
     }
 
 }

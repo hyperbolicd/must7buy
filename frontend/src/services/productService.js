@@ -62,3 +62,7 @@ export async function deleteProduct(token, productId) {
         },
     })
 }
+
+export async function searchProducts(query) {
+    return fetchData(`${PRODUCT_API_BASE_URL}/search?${query}`)
+}

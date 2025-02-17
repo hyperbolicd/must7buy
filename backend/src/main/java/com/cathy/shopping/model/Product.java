@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 
@@ -15,6 +16,7 @@ public class Product {
     private int id;
 
     @NotBlank(message = "Product name is mandatory")
+    @Size(min = 3, max = 8)
     private String name;
 
     @Column(columnDefinition="TEXT")

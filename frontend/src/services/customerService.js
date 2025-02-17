@@ -57,3 +57,22 @@ export async function loginCustomer(customer) {
         body: JSON.stringify(customer)
     })
 }
+
+export async function getCart(token) {
+    return fetchData(`${CUSTOMER_API_BASE_URL}/cart`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+    })
+}
+
+export async function updateCart(token, cart) {
+    return fetchData(`${CUSTOMER_API_BASE_URL}/cart`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(cart)
+    })
+}

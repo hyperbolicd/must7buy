@@ -69,4 +69,15 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Product>> searchProducts(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String style,
+            @RequestParam(required = false) String name
+        ) {
+        // TO DO
+        List<Product> products = productService.getAllProducts();
+        return ResponseEntity.ok(products.stream().filter(product -> product.getActive() == 1).toList());
+    }
+
 }

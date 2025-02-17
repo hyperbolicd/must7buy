@@ -15,6 +15,8 @@ import ErpBulkSaveProductPage from './pages/ErpBulkSaveProductPage/ErpBulkSavePr
 import LoginPage from './pages/LoginPage/LoginPage';
 import MyAccountPage from './pages/MyAccountPage/MyAccountPage';
 import ProductSearchPage from './pages/ProductSearchPage/ProductSearchPage';
+import { CartProvider } from './contexts/CartContext';
+import ProductCartPage from './pages/ProductCartPage/ProductCartPage';
 
 function App() {
   return (
@@ -22,10 +24,12 @@ function App() {
       <Router>
           <Routes> 
             {/* http://localhost:3000/ */}
-            <Route path='/' exact element={<UserProvider><MainPage /></UserProvider>}>
+            <Route path='/' exact element={<UserProvider><CartProvider><MainPage /></CartProvider></UserProvider>}>
               <Route index element={<Homepage />}></Route>
               <Route path='login' element={<LoginPage />}></Route>
-              <Route path='me' element={<PrivateRoute><MyAccountPage /></PrivateRoute>}></Route>
+              <Route path='me' exact element={<PrivateRoute><MyAccountPage /></PrivateRoute>}></Route>
+              <Route path="search" element={<ProductSearchPage />}></Route>
+              <Route path="cart" element={<ProductCartPage />}></Route>
               <Route path='test' exact element={<TestPage />}></Route>
 
               {/* <Route path="*" element={<Homepage />}></Route> */}

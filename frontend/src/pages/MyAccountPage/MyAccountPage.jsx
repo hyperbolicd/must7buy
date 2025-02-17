@@ -37,7 +37,9 @@ export default function MyAccountPage() {
     (async () => {
       const result = await getCustomerByUsername(user.token, user.username);
       console.log(result);
-      setMe(result);
+      if(!result.error) {
+        setMe(result);
+      }
     })()
   }, [])
 
@@ -45,7 +47,9 @@ export default function MyAccountPage() {
     (async () => {
       const result = await getMyOrders(user.token)
       console.log(result);
-      setOrders(result);
+      if(!result.error) {
+        setOrders(result);
+      }
     })()
   }, [])
 
@@ -88,7 +92,7 @@ export default function MyAccountPage() {
             </Form>
             <SubContent>
               <Title>近期訂單<Button onClick={handleOrderClick} variant='transparnet'>歷史訂單</Button></Title>
-              { orders &&
+              { 
                 orders.forEach(order => {
                   order.link = <Link to={`/me/orders/${order.id}`}>查看</Link>
                 })

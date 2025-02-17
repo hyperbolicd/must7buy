@@ -63,6 +63,9 @@ export default function LoginForm() {
           expiresIn: result.expiresIn
         }
         login(user)
+        if(!isBackend) {
+          navigate(-1)
+        }
       } else {
         alert('帳號或密碼不正確')
       }

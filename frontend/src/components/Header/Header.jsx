@@ -44,14 +44,17 @@ export default function Header() {
 
   function handleLoginClick() {
     navigate('/login')
+    setOption(defaultOption)
   }
 
   function handleProfileClick() {
     navigate('/me')
+    setOption(defaultOption)
   }
 
   function handleCartClick() {
     navigate('/cart')
+    setOption(defaultOption)
   }
 
   function handleAllItemsClick() {
@@ -61,6 +64,7 @@ export default function Header() {
 
   function handleCategoryClick(category) {
     navigate(`search?category=${category}`)
+    setOption(defaultOption)
   }
 
   function handleSuperIdolsClick() {

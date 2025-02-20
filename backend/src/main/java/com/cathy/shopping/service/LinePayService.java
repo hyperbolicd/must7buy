@@ -2,10 +2,7 @@ package com.cathy.shopping.service;
 
 import com.cathy.shopping.dto.linepay.*;
 import com.cathy.shopping.exception.ResourceNotFountException;
-import com.cathy.shopping.model.Customer;
-import com.cathy.shopping.model.Order;
-import com.cathy.shopping.model.OrderProduct;
-import com.cathy.shopping.model.Payment;
+import com.cathy.shopping.model.*;
 import com.cathy.shopping.repository.PaymentRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,14 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.*;
 
-@Service
-public class LinePayService {
+@Service("LINE_PAY")
+public class LinePayService implements PaymentService {
 
     @Value("${line.pay.channelId}")
     private String CHANNEL_ID;
@@ -36,6 +34,8 @@ public class LinePayService {
     @Value("${line.pay.baseUrl}")
     private String BASE_URL;
 
+    private static final String REDIRECT_BASE_URL = "http://localhost:3000/me/orders";
+
     @Autowired
     private RestTemplate restTemplate;
 
@@ -45,6 +45,15 @@ public class LinePayService {
     @Autowired
     private PaymentRepository paymentRepository;
 
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private OrderProductService orderProductService;
+
+    @Autowired
+    private ProductService productService;
+
     public void getInfo() {
         System.out.println("API URL: " + BASE_URL);
         System.out.println("Channel ID: " + CHANNEL_ID);
@@ -52,12 +61,13 @@ public class LinePayService {
     }
 
     @Transactional
-    public Optional<PaymentResponse> createPayment(Order order, RequestFromDTO requestDTO) {
+    @Override
+    public PaymentResponse createPayment(Order order, Customer.Cart cart) {
         String apiPath = "/v3/payments/request";
         String nonce = getNonce();
         String jsonData = "";
         try {
-            jsonData = mapper.writeValueAsString(requestDTO);
+            jsonData = mapper.writeValueAsString(getRequestForm(order, cart));
         } catch (JsonProcessingException e) {
             System.err.println(e.getMessage());
         }
@@ -79,15 +89,16 @@ public class LinePayService {
         payment.setAmount(order.getTotalPrice());
         paymentRepository.save(payment);
 
-        return Optional.ofNullable(response);
+        return response;
     }
 
-    public Optional<PaymentResponse> confirmPayment(String transactionId, ConfirmFormDTO requestDTO) {
+    @Override
+    public PaymentResponse confirmPayment(String transactionId, Order order) {
         String apiPath = "/v3/payments/" + transactionId + "/confirm";
         String nonce = getNonce();
         String jsonData = "";
         try {
-            jsonData = mapper.writeValueAsString(requestDTO);
+            jsonData = mapper.writeValueAsString(getConfirmFormDTO(order));
         } catch (JsonProcessingException e) {
             System.err.println(e.getMessage());
         }
@@ -98,14 +109,33 @@ public class LinePayService {
         PaymentResponse response = null;
         try {
             response = mapper.readValue(responseStr, PaymentResponse.class);
+
+            if ("0000".equals(response.getReturnCode())) { // Success
+                order.setStatus("SUCCESS");
+                order.setPaidAt(LocalDate.now());
+                orderService.updateOrder(order.getId(), order);
+
+                Payment existedPayment = paymentRepository.findPaymentByTransactionId(transactionId)
+                        .orElseThrow(() -> new ResourceNotFountException("Transaction id: " + transactionId + " not found."));
+                existedPayment.setStatus("SUCCESS");
+                paymentRepository.save(existedPayment);
+            } else {
+                orderService.cancelOrder(order.getId());
+
+                Payment existedPayment = paymentRepository.findPaymentByTransactionId(transactionId)
+                        .orElseThrow(() -> new ResourceNotFountException("Transaction id: " + transactionId + " not found."));
+                existedPayment.setStatus("EXPIRED");
+                paymentRepository.save(existedPayment);
+            }
+
         } catch (JsonProcessingException e) {
             System.err.println(e.getMessage());
         }
 
-        return Optional.ofNullable(response);
+        return response;
     }
 
-    public String sentPost(String apiPath, String mapperData, String nonce, String signature) {
+    private String sentPost(String apiPath, String mapperData, String nonce, String signature) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
         headers.add("X-LINE-ChannelId", CHANNEL_ID);
@@ -115,11 +145,11 @@ public class LinePayService {
         return restTemplate.postForObject(BASE_URL + apiPath, httpEntity, String.class);
     }
 
-    public String getNonce() {
+    private String getNonce() {
         return UUID.randomUUID().toString();
     }
 
-    public String getSignKey(String clientKey, String msg) {
+    private String getSignKey(String clientKey, String msg) {
         byte[] hmacBytes = HmacUtils.
                 getInitializedMac(HmacAlgorithms.HMAC_SHA_256, clientKey.getBytes())
                 .doFinal(msg.getBytes());
@@ -127,7 +157,7 @@ public class LinePayService {
         return Base64.getEncoder().encodeToString(hmacBytes);
     }
 
-    public RequestFromDTO getRequestForm(Order order, Customer.Cart cart) {
+    private RequestFromDTO getRequestForm(Order order, Customer.Cart cart) {
         RequestFromDTO form = new RequestFromDTO();
         form.setAmount(order.getTotalPrice().intValue());
         form.setCurrency("TWD");
@@ -139,9 +169,37 @@ public class LinePayService {
         PackageDTO packageDTO = new PackageDTO("1", order.getTotalPrice().intValue(), products);
         form.setPackages(List.of(packageDTO));
         RedirectUrlsDTO redirectUrls = new RedirectUrlsDTO();
-        redirectUrls.setConfirmUrl("http://localhost:3000/me/orders/" + order.getId() + "/payment/authorize");
-        redirectUrls.setCancelUrl("http://localhost:3000/me/orders/" + order.getId() + "/payment/cancel");
+        // ex. http://localhost:3000/me/orders/payment/authorize?transactionId=2025022002273935810&orderId=7
+        redirectUrls.setConfirmUrl(REDIRECT_BASE_URL + "/payment/authorize");
+        redirectUrls.setCancelUrl(REDIRECT_BASE_URL + "/payment/cancel");
         form.setRedirectUrls(redirectUrls);
         return form;
+    }
+
+    private ConfirmFormDTO getConfirmFormDTO(Order order) {
+        ConfirmFormDTO form = new ConfirmFormDTO();
+        form.setAmount(order.getTotalPrice().intValue());
+        form.setCurrency("TWD");
+        return form;
+    }
+
+    @Override
+    public PaymentResponse getPaymentStatus(String transactionId) {
+        return null;
+    }
+
+    @Override
+    public boolean cancelPayment(String transactionId) {
+        return false;
+    }
+
+    @Override
+    public PaymentResponse refundPayment(String transactionId) {
+        return null;
+    }
+
+    @Override
+    public List<Payment> getPaymentHistory(long userId) {
+        return List.of();
     }
 }

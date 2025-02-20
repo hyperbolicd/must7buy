@@ -1,48 +1,25 @@
 package com.cathy.shopping.service;
 
-import com.cathy.shopping.exception.ResourceNotFountException;
+import com.cathy.shopping.dto.linepay.PaymentResponse;
+import com.cathy.shopping.model.Customer;
+import com.cathy.shopping.model.Order;
 import com.cathy.shopping.model.Payment;
-import com.cathy.shopping.repository.PaymentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class PaymentService {
+public interface PaymentService {
 
-    @Autowired
-    private PaymentRepository paymentRepository;
+    PaymentResponse createPayment(Order order, Customer.Cart cart);
 
-    // Add service methods here
-    
-    public List<Payment> getAllPayments() {
-        return paymentRepository.findAll();
-    }
+    PaymentResponse getPaymentStatus(String transactionId);
 
-    public Payment createPayment(Payment payment) {
-        return paymentRepository.save(payment);
-    }
+    PaymentResponse confirmPayment(String transactionId, Order order);
 
-    public Payment getPaymentById(Integer id) {
-        return paymentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFountException("Payment not exist with id: " + id));
-    }
+    boolean cancelPayment(String transactionId);
 
-    public Payment getPaymentByTransactionId(String transactionId) {
-        return paymentRepository.findPaymentByTransactionId(transactionId)
-                .orElseThrow(() -> new ResourceNotFountException("Payment not exist with transaction id: " + transactionId));
-    }
-    
-    public Payment updatePayment(Integer id, Payment updatedPayment) {
-        Payment existingPayment = getPaymentById(id);
-        return paymentRepository.save(existingPayment);
-    }
+    PaymentResponse refundPayment(String transactionId);
 
-    public boolean deletePayment(Integer id) {
-        Payment payment = getPaymentById(id);
-        paymentRepository.delete(payment);
-        return true;
-    }
-       
+    List<Payment> getPaymentHistory(long userId);
 }

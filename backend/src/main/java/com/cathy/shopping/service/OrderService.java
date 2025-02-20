@@ -1,6 +1,5 @@
 package com.cathy.shopping.service;
 
-import com.cathy.shopping.dto.linepay.PaymentResponse;
 import com.cathy.shopping.exception.DataErrorException;
 import com.cathy.shopping.exception.ResourceNotFountException;
 import com.cathy.shopping.model.Customer;
@@ -15,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,9 +32,6 @@ public class OrderService {
     @Autowired
     private ProductService productService;
 
-    @Autowired
-    private LinePayService linePayService;
-
     // Add service methods here
     
     public List<Order> getAllOrders() {
@@ -51,7 +48,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Order createOrder(Customer.Cart cart) {
+    public Order createOrder(Customer.Cart cart, String type) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("auth===" + auth.getName());
 
@@ -64,6 +61,7 @@ public class OrderService {
         Order order = new Order();
         order.setCustomer(existingCustomer);
         order.setTotalPrice(BigDecimal.valueOf(cart.getTotalPrice()));
+        order.setPaymentType(type);
 
         Order createdOrder = orderRepository.save(order);
 
@@ -86,6 +84,24 @@ public class OrderService {
         customerService.updateCustomer(existingCustomer.getId(), existingCustomer);
 
         return createdOrder;
+    }
+
+    @Transactional
+    public Order cancelOrder(Integer id) {
+        Order order = orderRepository.getReferenceById(id);
+        order.setStatus("CANCEL");
+        Order canceledOrder = orderRepository.save(order);
+
+        List<OrderProduct> orderProducts = orderProductService.getOrderProductsByOrderId(order.getId());
+        List<Integer> orderProductIds = new ArrayList<>();
+
+        orderProducts.forEach(orderProduct -> {
+            Product product = orderProduct.getProduct();
+            product.setStock(product.getStock() + orderProduct.getQuantity());
+            productService.updateProduct(product.getId(), product);
+        });
+
+        return canceledOrder;
     }
 
     public Order getOrderById(Integer id) {

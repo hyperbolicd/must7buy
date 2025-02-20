@@ -26,3 +26,24 @@ export async function getProductByOrderId(token, orderId) {
         },
     })
 }
+
+export async function createOrders(token, cartItems, type) {
+    return fetchData(`${ORDER_API_BASE_URL}?type=${type}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(cartItems)
+    })
+}
+
+export async function cancelOrders(token, orderId) {
+    return fetchData(`${ORDER_API_BASE_URL}/${orderId}/cancel`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+    })
+}

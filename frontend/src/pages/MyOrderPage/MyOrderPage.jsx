@@ -8,8 +8,8 @@ import Table from '../../components/atoms/Table/Table'
 import SubContent from '../../components/atoms/SubMenu/SubContent'
 import Button from '../../components/atoms/Button/Button'
 import ExpandableComponent from '../../components/atoms/Expandable/Expandable'
-import { getOrderById, getProductByOrderId } from '../../services/orderService'
-import { createPayments } from '../../services/paymentService'
+import { cancelOrders, createOrders, getOrderById, getProductByOrderId } from '../../services/orderService'
+import { createPayment } from '../../services/paymentService'
 
 export default function MyOrderPage() {
   const { cartItems, removeItem, updateQuantity, clearCart, totalPrice } = useCart()
@@ -36,6 +36,8 @@ export default function MyOrderPage() {
   const [orderItems, setOrderItems] = useState([])
 
   useEffect(() => {
+    if(params.id === '_add') return;
+
     (async () => {
       const orderResult = await getOrderById(user.token, params.id);
       console.log(orderResult);
@@ -60,28 +62,38 @@ export default function MyOrderPage() {
   }, [])
 
   function handleCheckoutClick() {
-    
+    (async () => {
+      const result = await createOrders(user.token, {
+        cartItems: cartItems,
+        totalPrice: totalPrice,
+      }, 'LINE_PAY');
+      console.log(result);
+      if(!result.error) {
+        alert('訂單已成立，請盡快完成付款')
+        navigate('/me')
+      }
+    })()
   }
 
   function handlePayClick() {
     (async () => {
-      // const result = await createPayments(user.token, order, orderItems, 'LINE_PAY');
-      const result = {
-          "returnCode": "0000",
-          "returnMessage": "Success.",
-          "info": {
-              "paymentUrl": {
-                  "web": "https://sandbox-web-pay.line.me/web/payment/wait?transactionReserveId=UWRHS2tBaUtWb1I0RmhMQlVPNk5sem5FUXB2ZHZ0VnQ5U0dOQWRRY2kraUlxYlVtdXVDV1hIZmE0ZkZGaVJRTw",
-                  "app": "line://pay/payment/UWRHS2tBaUtWb1I0RmhMQlVPNk5sem5FUXB2ZHZ0VnQ5U0dOQWRRY2kraUlxYlVtdXVDV1hIZmE0ZkZGaVJRTw"
-              },
-              "transactionId": 2025021702273625810,
-              "paymentAccessToken": "772525889881"
-          }
-      }
+      const result = await createPayment(user.token, order, orderItems, 'LINE_PAY');
       console.log(result);
-      
+
       window.location.href = result.info.paymentUrl.web
     })()
+  }
+
+  function handleCancelClick() {
+    if(order.status != 'CANCEL' && window.confirm('請確認是否取消')) {
+      (async () => {
+        const result = await cancelOrders(user.token, order.id);
+        console.log(result);
+        if(!result.error) {
+          setOrder(result)
+        }
+      })()
+    }
   }
 
   return (
@@ -139,7 +151,7 @@ export default function MyOrderPage() {
       </SubContent>
       </>
     }
-    { params.id != '_add' &&
+    { params.id != '_add' && 
     <>
       <Title>訂單明細</Title>
       <SubContent position='center'>
@@ -151,10 +163,12 @@ export default function MyOrderPage() {
           <p>訂單完成: {order.completedAt}</p>
           <p>更新日期: {order.updatedDate}</p>
         <Title>總價: ${order.totalPrice.toFixed(2)}</Title>
-        { !order.paidAt &&
+        { order.status != 'CANCEL' && !order.paidAt && 
           <Button onClick={handlePayClick} variant='secondary'>訂單付款</Button>
         }
-        <Button onClick={handleCheckoutClick} variant='warning'>取消訂單</Button>
+        { order.status != 'CANCEL'&&
+          <Button onClick={handleCancelClick} variant='warning'>取消訂單</Button>
+        }
         <hr />
         <Title>商品明細</Title>
         <Table thead={theadMap} data={orderItems}></Table>

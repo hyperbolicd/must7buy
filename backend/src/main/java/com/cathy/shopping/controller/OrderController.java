@@ -1,11 +1,9 @@
 package com.cathy.shopping.controller;
 
-import com.cathy.shopping.dto.linepay.PaymentResponse;
 import com.cathy.shopping.model.Customer;
 import com.cathy.shopping.model.Order;
 import com.cathy.shopping.model.OrderProduct;
 import com.cathy.shopping.service.CustomerService;
-import com.cathy.shopping.service.LinePayService;
 import com.cathy.shopping.service.OrderProductService;
 import com.cathy.shopping.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +24,6 @@ public class OrderController {
     private CustomerService customerService;
 
     @Autowired
-    private LinePayService linePayService;
-
-    @Autowired
     private OrderProductService orderProductService;
 
     @GetMapping
@@ -44,20 +39,20 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody Customer.Cart cart) {
-        Order order = orderService.createOrder(cart);
+    public ResponseEntity<Order> createOrder(@RequestBody Customer.Cart cart, @RequestParam String type) {
+        Order order = orderService.createOrder(cart, type);
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
-    }
-
-    @GetMapping("/linepayInfo")
-    public ResponseEntity<String> getLinePayInfo() {
-        linePayService.getInfo();
-        return ResponseEntity.ok("OK");
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrderById(@PathVariable int id) {
         Order order = orderService.getOrderById(id);
+        return ResponseEntity.ok(order);
+    }
+
+    @PutMapping("/{id}/cancel")
+    public ResponseEntity<Order> cancelOrder(@PathVariable int id) {
+        Order order = orderService.cancelOrder(id);
         return ResponseEntity.ok(order);
     }
 

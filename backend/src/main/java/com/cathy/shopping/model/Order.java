@@ -41,6 +41,9 @@ public class Order {
     @Column(name = "completed_at")
     private LocalDate completedAt;
 
+    @Column(name = "payment_type")
+    private String paymentType;
+
     @JsonIgnore
     @OneToOne(mappedBy = "order")
     private Payment payment;
@@ -133,5 +136,13 @@ public class Order {
 
     public void setPayment(Payment payment) {
         this.payment = payment;
+    }
+
+    public String getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(String paymentType) {
+        this.paymentType = paymentType;
     }
 }

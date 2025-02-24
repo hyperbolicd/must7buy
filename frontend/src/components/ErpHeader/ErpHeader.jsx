@@ -7,7 +7,7 @@ export default function ErpHeader() {
 
   const navs = [
     { name: '商品管理', path: 'products', isOpen: true},
-    { name: '用戶管理', path: 'customers', isOpen: true},
+    { name: '用戶管理', path: 'customers', isOpen: false},
     { name: '訂單管理', path: 'orders', isOpen: false},
     { name: '統計報表', path: 'dashboard', isOpen: false},
     { name: '員工管理', path: 'employees', isOpen: true},

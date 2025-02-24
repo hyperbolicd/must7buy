@@ -1,18 +1,15 @@
 package com.cathy.shopping.exception;
 
-import io.jsonwebtoken.JwtException;
-import jakarta.validation.ConstraintViolationException;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.CredentialsExpiredException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,8 +40,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{ \"error\": \"" + message + "\"}");
     }
 
-//    @ExceptionHandler(ServiceException.class)
-//    public ResponseEntity<String> handleValidationExceptions(ServiceException e) {
-//        return ResponseEntity.badRequest().body("{ \"error\": \"" + e.getMessage() + "\"}");
-//    }
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Map<String, Object>> handleRuntimeExceptions(RuntimeException e) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("error", e.getMessage());
+        errorResponse.put("timestamp", LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
 }

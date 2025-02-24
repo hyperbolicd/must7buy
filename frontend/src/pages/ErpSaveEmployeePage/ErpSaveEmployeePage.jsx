@@ -11,7 +11,7 @@ import SubContent from '../../components/atoms/SubMenu/SubContent'
 export default function ErpSaveEmployeePage() {
   const params = useParams()
   const [employee, setEmployee] = useState({
-    id: '',
+    id: null,
     username: '',
     password: '',
     displayName: '',
@@ -19,7 +19,7 @@ export default function ErpSaveEmployeePage() {
     address: '',
     photo: '',
     hireDate: '',
-    role: ''
+    role: null
   })
   const [photoUrl, setPhotoUrl] = useState(null)
   const navigate = useNavigate();  
@@ -65,10 +65,11 @@ export default function ErpSaveEmployeePage() {
     setEmployee(updatedEmployee)
   } 
 
-  const debouncedChangeHandler = debounce(changeHandler, 1000)
+  const debouncedChangeHandler = debounce(changeHandler, 200)
 
 
   function handleUpdateEmployClick() {
+    console.log(employee)
     if(isCreate) {
       (async () => {
         const result = await createEmployee(user.token, employee)

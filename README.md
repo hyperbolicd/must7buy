@@ -1,6 +1,17 @@
 # must7buy
 React & Spring Boot Full-Stack Application
 
+## Demo 
+ [PPT](https://docs.google.com/presentation/d/1Rm5qWdPsVBol6uP9HqAV3WZ9PpUKh8LHlZG2piFr7XE/edit?usp=drive_link)  
+ 
+[Frontend](https://d2345x94352y0r.cloudfront.net/home)  
+Test Account: Please register a new one  
+
+[Backend](https://d2345x94352y0r.cloudfront.net/erp)   
+Test Account: E2025003/123456  
+
+
+
 ## Overview
 * This project is a full-stack web application built to practice advanced React and Spring Boot development.  
 * The backend is secured using Spring Security with JWT authentication and integrates a third-party payment.   

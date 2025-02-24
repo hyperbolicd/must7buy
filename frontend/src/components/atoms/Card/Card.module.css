@@ -1,0 +1,30 @@
+:root {
+    --product-card-size: 180px;
+    --product-title-size: 50px;
+}
+
+.product {
+    background-color: rgb(242, 242, 242);
+    border-radius: 10px;
+    height: calc(var(--product-card-size) + 80px);
+    width: var(--product-card-size);
+    padding: 20px;
+
+    img {
+        height: calc(var(--product-card-size) - 40px);
+        width: calc(var(--product-card-size) - 40px);
+        border-radius: 10px;
+    }
+    h4 {
+        margin: 0;
+        color: black;
+        height: var(--product-title-size);
+    }
+    a {
+        text-decoration: none;
+    }
+}
+
+.right {
+    text-align: right;
+}

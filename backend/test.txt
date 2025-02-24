@@ -1,0 +1,52 @@
+{
+    "Command": {
+        "CommandId": "b9bcb4bf-9268-4759-9b40-e7d99728b9af",
+        "DocumentName": "AWS-RunShellScript",
+        "DocumentVersion": "$DEFAULT",
+        "Comment": "",
+        "ExpiresAfter": "2025-01-08T23:51:42.293000+08:00",
+        "Parameters": {
+            "commands": [
+                "export SPRING_CORS_ORIGIN=aaa",
+                "echo $SPRING_CORS_ORIGIN"
+            ]
+        },
+        "InstanceIds": [],
+        "Targets": [
+            {
+                "Key": "instanceIds",
+                "Values": [
+                    "i-0fdc0e309dff8e9cb"
+                ]
+            }
+        ],
+        "RequestedDateTime": "2025-01-08T21:51:42.293000+08:00",
+        "Status": "Pending",
+        "StatusDetails": "Pending",
+        "OutputS3Region": "ap-southeast-2",
+        "OutputS3BucketName": "",
+        "OutputS3KeyPrefix": "",
+        "MaxConcurrency": "50",
+        "MaxErrors": "0",
+        "TargetCount": 0,
+        "CompletedCount": 0,
+        "ErrorCount": 0,
+        "DeliveryTimedOutCount": 0,
+        "ServiceRole": "",
+        "NotificationConfig": {
+            "NotificationArn": "",
+            "NotificationEvents": [],
+            "NotificationType": ""
+        },
+        "CloudWatchOutputConfig": {
+            "CloudWatchLogGroupName": "",
+            "CloudWatchOutputEnabled": false
+        },
+        "TimeoutSeconds": 3600,
+        "AlarmConfiguration": {
+            "IgnorePollAlarmFailure": false,
+            "Alarms": []
+        },
+        "TriggeredAlarms": []
+    }
+}

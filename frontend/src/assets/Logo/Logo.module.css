@@ -1,0 +1,11 @@
+.logo {
+    height: 100%;
+    overflow: hidden;
+    width: 200px;
+}
+
+.img {
+    margin: 3%;
+    height: 80%;
+    width: 90%;
+}

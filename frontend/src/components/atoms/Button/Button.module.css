@@ -1,0 +1,98 @@
+.btn {
+  border: none;
+  border-radius: 10px;
+  width: fit-content;
+  margin: 0.25em 0.5em;
+  padding: 0.25em 0.5em;
+
+  &:hover {
+    filter: brightness(0.9);
+  }
+  &:active {
+    filter: brightness(1);
+  }
+}
+
+:root {
+  /* font */
+  --default-color: black;
+  --color: white;
+  --s-font-size: 15px;
+  --m-font-size: 20px;
+  --l-font-size: 30px;
+  /* button */
+  --primary-color: rgb(255, 202, 69);
+  --secondary-color: rgb(66, 120, 255);
+  --warning-color: rgb(255, 94, 94);
+  --transparent-color: transparent;
+  --s-button-size: 30px;
+  --m-button-size: 40px;
+  --l-button-size: 50px;
+}
+
+.btn-s {
+  height: var(--s-button-size);
+  min-width: var(--s-button-size);
+  font-size: var(--s-font-size);
+}
+
+.btn-m {
+  height: var(--m-button-size);
+  min-width: var(--m-button-size);
+  font-size: var(--m-font-size);
+}
+
+.btn-l {
+  height: var(--l-button-size);
+  min-width: var(--l-button-size);
+  font-size: var(--l-font-size);
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: var(--color);
+  &:active {
+    box-shadow: 0 0 5px var(--primary-color);
+  }
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color);
+  color: var(--color);
+  &:active {
+    box-shadow: 0 0 5px var(--secondary-color);
+  }
+}
+
+.btn-warning {
+  background-color: var(--warning-color);
+  color: var(--color);
+  &:active {
+    box-shadow: 0 0 5px var(--warning-color);
+  }
+}
+
+.btn-transparent {
+  background-color: var(--transparent-color);
+  color: var(--default-color);
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0;
+  padding: 0;
+
+  &:hover {
+    color: rgb(101, 101, 101);
+  }
+  &:active {
+    filter: brightness(1);
+  }
+}
+
+.btn-round {
+  border-radius: 50%;
+  padding: 0.25em;
+}
+
+.btn-rectangle {
+  border-radius: 0px;
+}

@@ -1,0 +1,26 @@
+.right {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.left {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+
+.inline-block {
+    display: inline-block;
+}
+
+.gap-s {
+    gap: 20px;
+}
